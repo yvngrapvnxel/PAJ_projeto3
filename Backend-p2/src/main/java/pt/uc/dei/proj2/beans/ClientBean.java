@@ -25,10 +25,6 @@ public class ClientBean implements Serializable {
 
         // Chama o método genérico do StorageBean para obter o ID
         // Passamos a lista de todos os clientes do sistema e a regra para ler o ID
-        //List<ClientPojo> todosClientes = storageBean.getUsers().stream()
-        //        .flatMap(u -> u.getMeusClientes().stream())
-        //        .toList();
-
         int nextId = storageBean.generateNextId(
                 storageBean.getUsers().stream()
                     .flatMap(u -> u.getMeusClientes().stream())

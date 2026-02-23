@@ -67,7 +67,7 @@ public class LeadPojo {
     }
 
 
-    public void setDataCriacao(LocalDate now) {
-
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 }
