@@ -67,4 +67,7 @@ public class LeadPojo {
     }
 
 
+    public void setDataCriacao(LocalDate now) {
+
+    }
 }

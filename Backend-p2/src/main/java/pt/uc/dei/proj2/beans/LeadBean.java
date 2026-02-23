@@ -8,6 +8,7 @@ import pt.uc.dei.proj2.pojo.LeadPojo;
 import pt.uc.dei.proj2.pojo.UserPojo;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -17,22 +18,6 @@ public class LeadBean implements Serializable {
     @Inject
     StorageBean storageBean;
 
-    // Gerar ID
-
-    /*private int generateLeadId(UserPojo user) {
-
-        int max = 0;
-
-        for (LeadPojo l : user.getMeusLeads()) {
-            if (l.getId() > max) {
-                max = l.getId();
-            }
-        }
-
-        return max + 1;
-
-    }
-*/
     // Criar Lead
 
     public LeadPojo createLead(String username, LeadDto leadDto) {
@@ -47,6 +32,7 @@ public class LeadBean implements Serializable {
         novaLead.setTitulo(leadDto.getTitulo());
         novaLead.setDescricao(leadDto.getDescricao());
         novaLead.setEstado(leadDto.getEstado());
+        novaLead.setDataCriacao(LocalDate.now());
 
         storageBean.addLeads(novaLead,username);
 

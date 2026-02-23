@@ -5,7 +5,7 @@ let leadsList = [];
 const statusOptions = ["Novo", "Em análise", "Proposta", "Ganho", "Perdido"];
 
 // ==========================================
-// 1. CARREGAR E LISTAR
+// CARREGAR E LISTAR
 // ==========================================
 
 async function carregarLeads() {
@@ -91,28 +91,40 @@ function renderListaLeads(lista) {
   const container = document.getElementById("listaLeads");
   if (!container) return;
 
-  if (!lista || lista.length === 0) {
-    container.innerHTML = `<p>Nenhuma lead guardada.</p>`;
-    return;
-  }
+  container.innerHTML = lista.map(lead => {
+    const nomeEstado = statusOptions[Number(lead.estado)] ?? "Desconhecido";
+    const dataTxt = formatarData(lead.dataCriacao);
 
-  container.innerHTML = lista
-    .map((l, i) => {
-      const nomeEstado = statusOptions[Number(l.estado)] ?? "Desconhecido";
-      return `
-        <div class="lead-item">
-          <button class="lead-btn" onclick="mostrarDetalhesLeadPorId(${l.id})">
-            <span class="lead-titulo">${l.titulo}</span>
-            <span class="lead-estado">Estado: ${nomeEstado}</span>
-          </button>
-        </div>
-      `;
-    })
-    .join("");
+    return `
+      <div class="lead-item">
+        <button class="lead-btn" onclick="mostrarDetalhesLeadPorId(${lead.id})">
+          <span class="lead-titulo">${lead.titulo}</span>
+          <span class="lead-estado">Estado: ${nomeEstado}</span>
+          <span class="lead-data">Criada: ${dataTxt}</span>
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+// Formatação de data
+
+function formatarData(data) {
+  if (!data) return "-";
+
+  const str = String(data);
+
+  // Se vier tipo "2026-02-23T10:20:30..."
+  const apenasData = str.includes("T") ? str.split("T")[0] : str;
+
+  const [y, m, d] = apenasData.split("-");
+  if (!y || !m || !d) return str;
+
+  return `${d}-${m}-${y}`;
 }
 
 // ==========================================
-// 2. MOSTRAR DETALHES
+// MOSTRAR DETALHES
 // ==========================================
 
 function mostrarDetalhesLeadPorId(id) {
@@ -134,6 +146,7 @@ function mostrarDetalhesLeadPorId(id) {
       <p><strong>Título:</strong> ${lead.titulo}</p>
       <p><strong>Descrição:</strong> ${lead.descricao}</p>
       <p><strong>Estado:</strong> ${nomeEstado}</p>
+      <p><strong>Data de criação:</strong> ${formatarData(lead.dataCriacao)}</p>
 
       <br>
       <button class="btn" onclick="editarLead(${lead.id})">
@@ -150,7 +163,7 @@ function mostrarDetalhesLeadPorId(id) {
 }
 
 // ==========================================
-// 3. FORMULÁRIOS (NOVO E EDITAR)
+// FORMULÁRIOS (NOVO E EDITAR)
 // ==========================================
 
 function formNovaLead() {
@@ -224,7 +237,7 @@ function editarLead(id) {
 }
 
 // ==========================================
-// 4. CRUD (GUARDAR E REMOVER)
+// GUARDAR E REMOVER
 // ==========================================
 
 async function guardarLead(id = null) {
@@ -303,7 +316,7 @@ async function removerLead(id) {
 }
 
 // ==========================================
-// 5. VALIDAÇÕES (mesmo padrão do clientes.js)
+// 5. VALIDAÇÕES 
 // ==========================================
 
 function ativarValidacaoNovaLead() {
