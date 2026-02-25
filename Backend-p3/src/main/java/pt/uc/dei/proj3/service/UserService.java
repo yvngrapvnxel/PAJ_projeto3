@@ -1,12 +1,12 @@
-package pt.uc.dei.proj2.service;
+package pt.uc.dei.proj3.service;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pt.uc.dei.proj2.beans.UserBean;
-import pt.uc.dei.proj2.dto.UserDto;
-import pt.uc.dei.proj2.pojo.UserPojo;
+import pt.uc.dei.proj3.beans.UserBean;
+import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.pojo.UserPojo;
 
 @Path("/users")
 public class UserService {

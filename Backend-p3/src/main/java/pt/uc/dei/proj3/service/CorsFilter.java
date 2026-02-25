@@ -1,4 +1,4 @@
-package pt.uc.dei.proj2.service;
+package pt.uc.dei.proj3.service;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;

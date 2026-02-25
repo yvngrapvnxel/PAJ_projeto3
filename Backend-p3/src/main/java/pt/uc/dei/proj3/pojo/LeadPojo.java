@@ -1,4 +1,4 @@
-package pt.uc.dei.proj2.pojo;
+package pt.uc.dei.proj3.pojo;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;

@@ -1,13 +1,13 @@
-package pt.uc.dei.proj2.beans;
+package pt.uc.dei.proj3.beans;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
-import pt.uc.dei.proj2.dto.ClientDto;
-import pt.uc.dei.proj2.pojo.ClientPojo;
-import pt.uc.dei.proj2.pojo.LeadPojo;
-import pt.uc.dei.proj2.pojo.UserPojo;
+import pt.uc.dei.proj3.dto.ClientDto;
+import pt.uc.dei.proj3.pojo.ClientPojo;
+import pt.uc.dei.proj3.pojo.LeadPojo;
+import pt.uc.dei.proj3.pojo.UserPojo;
 
 import java.io.*;
 import java.util.ArrayList;

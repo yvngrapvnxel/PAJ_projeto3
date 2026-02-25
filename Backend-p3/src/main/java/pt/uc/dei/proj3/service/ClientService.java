@@ -1,13 +1,13 @@
-package pt.uc.dei.proj2.service;
+package pt.uc.dei.proj3.service;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pt.uc.dei.proj2.beans.ClientBean;
-import pt.uc.dei.proj2.beans.UserBean;
-import pt.uc.dei.proj2.dto.ClientDto;
-import pt.uc.dei.proj2.pojo.ClientPojo;
+import pt.uc.dei.proj3.beans.ClientBean;
+import pt.uc.dei.proj3.beans.UserBean;
+import pt.uc.dei.proj3.dto.ClientDto;
+import pt.uc.dei.proj3.pojo.ClientPojo;
 import java.util.List;
 
 @Path("/clientes")

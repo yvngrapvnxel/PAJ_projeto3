@@ -1,4 +1,4 @@
-package pt.uc.dei.proj2.dto;
+package pt.uc.dei.proj3.dto;
 
 import jakarta.xml.bind.annotation.XmlElement;
 

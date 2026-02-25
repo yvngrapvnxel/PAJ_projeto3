@@ -1,11 +1,11 @@
-package pt.uc.dei.proj2.beans;
+package pt.uc.dei.proj3.beans;
 
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import pt.uc.dei.proj2.dto.LeadDto;
-import pt.uc.dei.proj2.pojo.LeadPojo;
-import pt.uc.dei.proj2.pojo.UserPojo;
+import pt.uc.dei.proj3.dto.LeadDto;
+import pt.uc.dei.proj3.pojo.LeadPojo;
+import pt.uc.dei.proj3.pojo.UserPojo;
 
 import java.io.Serializable;
 import java.time.LocalDate;

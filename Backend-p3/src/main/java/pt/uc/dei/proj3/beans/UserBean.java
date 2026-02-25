@@ -1,10 +1,10 @@
-package pt.uc.dei.proj2.beans;
+package pt.uc.dei.proj3.beans;
 
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import pt.uc.dei.proj2.dto.UserDto;
-import pt.uc.dei.proj2.pojo.UserPojo;
+import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.pojo.UserPojo;
 
 import java.io.Serializable;
 
