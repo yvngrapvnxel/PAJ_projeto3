@@ -15,12 +15,10 @@ public class LeadDto {
     public LeadDto() {
     }
 
-    public LeadDto(int id, String titulo, String descricao, int estado) {
-        this.id = id;
+    public LeadDto(String titulo, String descricao, int estado) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.estado = estado;
-        this.dataCriacao = LocalDate.now();
     }
 
     @XmlElement
@@ -28,9 +26,6 @@ public class LeadDto {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @XmlElement
     public String getTitulo() {

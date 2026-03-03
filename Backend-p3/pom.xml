@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>aor.paj</groupId>
-    <artifactId>backend-p2</artifactId>
+    <artifactId>backend-p3</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>backend-p2</name>
+    <name>backend-p3</name>
     <packaging>war</packaging>
 
     <properties>
@@ -48,7 +48,22 @@
             <version>4.0.0</version>
             <scope>runtime</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.6.7.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.10</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
