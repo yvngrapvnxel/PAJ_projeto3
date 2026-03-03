@@ -18,6 +18,7 @@ public class UserPojo {
     private String username;
     private String password;
     private String fotoUrl; // Requisito: URL da imagem [cite: 57]
+    private String token;
 
     private List <LeadPojo> meusLeads;
     private List<ClientPojo> meusClientes;
@@ -111,6 +112,15 @@ public class UserPojo {
 
     public void setFotoUrl(String fotoUrl) {
         this.fotoUrl = fotoUrl;
+    }
+
+    @XmlElement
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @XmlElement

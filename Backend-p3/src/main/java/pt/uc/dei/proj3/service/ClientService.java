@@ -22,11 +22,13 @@ public class ClientService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addCliente(@HeaderParam("username") String username,@HeaderParam("password") String password, ClientDto clienteDto) {
+    public Response addCliente(@HeaderParam("username") String username,
+                               @HeaderParam("token") String token, ClientDto clienteDto) {
 
         // 1. Verificação de Autenticação (como fazes no login/register)
-        if (username == null || password == null || !userBean.login(username, password)) {
-            return Response.status(401).entity("Acesso negado - Credenciais inválidas").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         // 2. Validação básica de campos (Nome e Empresa obrigatórios + pelo menos UM contacto)
@@ -54,10 +56,12 @@ public class ClientService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getClientes(@HeaderParam("username") String username, @HeaderParam("password") String password) {
+    public Response getClientes(@HeaderParam("username") String username,
+                                @HeaderParam("token") String token) {
 
-        if (username == null || password == null || !userBean.login(username, password)) {
-            return Response.status(401).entity("Acesso negado - Credenciais inválidas").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         // Retorna a lista de clientes do utilizador logado
@@ -68,11 +72,13 @@ public class ClientService {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editarCliente(@PathParam("id") int id, @HeaderParam("username") String username, @HeaderParam("password") String password, ClientDto dto) {
+    public Response editarCliente(@PathParam("id") int id,
+                                  @HeaderParam("username") String username,
+                                  @HeaderParam("token") String token, ClientDto dto) {
 
-        // Validação de segurança básica
-        if (username == null || username.isEmpty() || !userBean.login(username, password)) {
-            return Response.status(401).entity("Acesso negado - Credenciais inválidas").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         // 2. Validação básica de campos (Nome e Empresa obrigatórios + pelo menos UM contacto)
@@ -95,11 +101,14 @@ public class ClientService {
 
     @DELETE
     @Path("/{id}")
-    public Response eliminarCliente(@PathParam("id") int id, @HeaderParam("username") String username, @HeaderParam("password") String password) {
+    public Response eliminarCliente(@PathParam("id") int id,
+                                    @HeaderParam("username") String username,
+                                    @HeaderParam("token") String token) {
 
         // Verificação de segurança básica
-        if (username == null || username.isEmpty() || !userBean.login(username, password)) {
-            return Response.status(401).entity("Acesso negado - Credenciais inválidas").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         boolean sucess = clientBean.deletClient(id);

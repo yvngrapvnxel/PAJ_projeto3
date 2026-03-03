@@ -20,6 +20,6 @@ public class CorsFilter implements ContainerResponseFilter {
         responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
 
         // Permite os Headers customizados (incluindo username e password que o enunciado pede)
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, username, password");
+        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, username, token");
     }
 }
