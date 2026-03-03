@@ -46,10 +46,10 @@ public class StorageBean implements Serializable {
     //
     //ToIntFunction<T> idExtractor: É uma regra que diz ao método qual campo deve ser lido como ID (ex: UserPojo::getId ou ClientePojo::getId).
     public <T> int generateNextId(Collection<T> items, java.util.function.ToIntFunction<T> idExtractor) {
-        return items.stream() //Transforma a lista em um fluxo de dados para que possamos processar um por um de forma funcional.
-                .mapToInt(idExtractor) //Ele entra em cada objeto da lista e extrai apenas o valor do ID
-                .max() //Percorre todos esses números e encontra o maior valor existente.
-                .orElse(0) + 1; //Se a lista estiver vazia, ele assume que o maior ID atual é 0 e incrementa 1
+        return items.stream()       //Transforma a lista em um fluxo de dados para que possamos processar um por um de forma funcional.
+                .mapToInt(idExtractor)      //Ele entra em cada objeto da lista e extrai apenas o valor do ID
+                .max()      //Percorre todos esses números e encontra o maior valor existente.
+                .orElse(0) + 1;         //Se a lista estiver vazia, ele assume que o maior ID atual é 0 e incrementa 1
     }
 
     public List<UserPojo> getUsers() {
@@ -72,6 +72,17 @@ public class StorageBean implements Serializable {
     public UserPojo findUser(String username) {
         return root.users.stream()
                 .filter(u -> u.getUsername().equalsIgnoreCase(username))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public UserPojo findUserByToken(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            return null;
+        }
+        return root.users.stream()
+                // Procura o utilizador cujo token guardado seja igual ao token recebido
+                .filter(u -> token.equals(u.getToken()))
                 .findFirst()
                 .orElse(null);
     }

@@ -23,10 +23,11 @@ public class LeadService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addLead(@HeaderParam("username") String username,@HeaderParam("password") String password, LeadDto leadDto) {
+    public Response addLead(@HeaderParam("username") String username,@HeaderParam("token") String token, LeadDto leadDto) {
 
-        if (username == null || password == null || !userBean.login(username,password)) {
-            return Response.status(401).entity("Utilizador não autenticado").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         if (leadDto == null ||
@@ -45,10 +46,11 @@ public class LeadService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLeads(@HeaderParam("username") String username, @HeaderParam("password") String password) {
+    public Response getLeads(@HeaderParam("username") String username, @HeaderParam("token") String token) {
 
-        if (username == null || password == null || !userBean.login(username,password)) {
-            return Response.status(401).entity("Utilizador não autenticado").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         List<LeadPojo> leads = leadBean.getLeads(username);
@@ -59,11 +61,12 @@ public class LeadService {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editarLead(@PathParam("id") int id,
-                               @HeaderParam("username") String username, @HeaderParam("password") String password,
+                               @HeaderParam("username") String username, @HeaderParam("token") String token,
                                LeadDto dto) {
 
-        if (username == null || password == null || !userBean.login(username,password)) {
-            return Response.status(401).entity("Utilizador não autenticado").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         if (dto == null ||
@@ -84,10 +87,11 @@ public class LeadService {
     @DELETE
     @Path("/{id}")
     public Response eliminarLead(@PathParam("id") int id,
-                                 @HeaderParam("username") String username, @HeaderParam("password") String password) {
+                                 @HeaderParam("username") String username, @HeaderParam("token") String token) {
 
-        if (username == null || password == null || !userBean.login(username,password)) {
-            return Response.status(401).entity("Utilizador não autenticado").build();
+        // 1. Usar o novo método validarToken em vez do login
+        if (username == null || token == null || !userBean.validarToken(username, token)) {
+            return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         boolean success = leadBean.deleteLead(username, id);

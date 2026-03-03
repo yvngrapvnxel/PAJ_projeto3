@@ -15,12 +15,24 @@ public class UserBean implements Serializable {
     @Inject
     StorageBean storageBean;
 
-    public boolean login(String username, String password){
+    public String loginToken(String username, String password){
         UserPojo u = storageBean.findUser(username);
         if (u != null && u.getPassword().equals(password)) {
-            return true;
+            String token = TokenBean.generateToken();
+            u.setToken(token);
+            storageBean.save();
+            return token;
         }
-        return false;
+        return null;
+    }
+
+    // 2. Novo método para validar o token nos restantes pedidos
+    public boolean validarToken(String username, String token) {
+        if (username == null || token == null) return false;
+
+        UserPojo u = storageBean.findUser(username);
+        // Verifica se o utilizador existe e se o token coincide
+        return u != null && token.equals(u.getToken());
     }
 
     public boolean register(UserDto newUser) {

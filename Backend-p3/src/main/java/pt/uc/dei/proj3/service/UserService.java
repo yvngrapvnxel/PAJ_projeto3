@@ -24,8 +24,12 @@ public class UserService {
             return Response.status(401).entity("Dados incompletos").build();
         }
 
-        if (userBean.login(user.getUsername(), user.getPassword())) {
-            return Response.status(200).entity("Login Successful!").build(); // [cite: 114]
+        // Chama o novo método que retorna o token
+        String token = userBean.loginToken(user.getUsername(), user.getPassword());
+
+        if (token != null) {
+            // Devolve o token ao utilizador em formato JSON
+            return Response.status(200).entity("{\"token\": \"" + token + "\"}").build();
         }
 
         // Se a autenticação falhar [cite: 115]
@@ -67,34 +71,37 @@ public class UserService {
         return Response.status(200).entity(user).build(); // [cite: 168]
     }
 
-    @POST
+    @POST // Nota: Pelas boas práticas RESTful[cite: 129], para atualizações deves considerar usar @PUT em vez de @POST
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateProfile(
             @PathParam("username") String userAAlterar, // O nome que vem no URL
             @HeaderParam("username") String userAuth,   // O nome que vem no Header
-            @HeaderParam("password") String passAuth,   // A pass que vem no Header
+            @HeaderParam("token") String tokenAuth,     // O token que vem no Header (substituiu a password)
             UserPojo dadosNovos) {
 
         // PASSO 1: Verificar se os Headers existem (ERRO 401)
-        if (userAuth == null || passAuth == null || userAuth.isEmpty()) {
-            return Response.status(401).entity("Faltam credenciais no Header").build();
+        if (userAuth == null || tokenAuth == null || userAuth.trim().isEmpty() || tokenAuth.trim().isEmpty()) {
+            // Retorna 401 se os dados do Header (token) não forem enviados
+            return Response.status(401).entity("Faltam credenciais no Header (username ou token)").build();
         }
 
-        // PASSO 2: Verificar se a senha está correta (ERRO 403)
-        if (!userBean.login(userAuth, passAuth)) {
-            return Response.status(403).entity("Credenciais inválidas").build();
+        // PASSO 2: Verificar se o token é válido (ERRO 403)
+        if (!userBean.validarToken(userAuth, tokenAuth)) {
+            // Retorna 403 se a autenticação (verificação do token) falhar
+            return Response.status(403).entity("Credenciais (Token) inválidas").build();
         }
 
-        // PASSO 3: Verificar se o "Joao" está a tentar mudar o perfil do "Joao" (ERRO 403)
+        // PASSO 3: Verificar se o utilizador está a tentar alterar o seu próprio perfil (ERRO 403)
         if (!userAuth.equals(userAAlterar)) {
+            // Retorna 403 porque um utilizador não pode alterar o perfil de outro
             return Response.status(403).entity("Não podes alterar dados de outros utilizadores").build();
         }
 
         // Se passar tudo, então grava...
         userBean.updateUser(userAAlterar, dadosNovos);
-        return Response.ok("Atualizado!").build();
+        return Response.status(200).entity("Perfil atualizado com sucesso!").build();
     }
 
 }
