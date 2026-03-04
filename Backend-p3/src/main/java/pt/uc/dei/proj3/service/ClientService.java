@@ -7,6 +7,8 @@ import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.ClientBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.ClientDto;
+import pt.uc.dei.proj3.dto.UserDto;
+
 import java.util.List;
 
 @Path("/clientes")
@@ -21,12 +23,13 @@ public class ClientService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addCliente(@HeaderParam("username") String username,
-                               @HeaderParam("token") String token, ClientDto clienteDto) {
+    public Response addCliente(@HeaderParam("token") String token, ClientDto clienteDto) {
+
+        UserDto user = userBean.getUserByToken(token);
 
         // 1. Verificação de Autenticação (como fazes no login/register)
         // 1. Usar o novo método validarToken em vez do login
-        if (username == null || token == null || !userBean.validarToken(username, token)) {
+        if (user == null || token == null ) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
@@ -42,7 +45,7 @@ public class ClientService {
 
         try {
             // 2. Tenta registar (o Bean vai validar duplicados Nome+Empresa e gerar o ID)
-            ClientPojo novo = clientBean.registarCliente(clienteDto, username);
+            ClientDto novo = clientBean.registarCliente(clienteDto, user.getUsername());
 
             // Retorna 201 Created com o objeto criado
             return Response.status(201).entity(novo).build();
@@ -55,28 +58,29 @@ public class ClientService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getClientes(@HeaderParam("username") String username,
-                                @HeaderParam("token") String token) {
+    public Response getClientes(@HeaderParam("token") String token) {
 
-        // 1. Usar o novo método validarToken em vez do login
-        if (username == null || token == null || !userBean.validarToken(username, token)) {
+        UserDto user = userBean.getUserByToken(token);
+
+        // 1. Verificação de Autenticação (como fazes no login/register)
+        if (user == null || token == null ) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
         // Retorna a lista de clientes do utilizador logado
-        List<ClientPojo> clientes = clientBean.listClients(username);
+        List<ClientDto> clientes = clientBean.listClients(user.getUsername());
         return Response.status(200).entity(clientes).build();
     }
 
     @PUT
-    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editarCliente(@PathParam("id") int id,
-                                  @HeaderParam("username") String username,
-                                  @HeaderParam("token") String token, ClientDto dto) {
+    public Response editarCliente(@HeaderParam("token") String token, ClientDto dto) {
 
+        UserDto user = userBean.getUserByToken(token);
+
+        // 1. Verificação de Autenticação (como fazes no login/register)
         // 1. Usar o novo método validarToken em vez do login
-        if (username == null || token == null || !userBean.validarToken(username, token)) {
+        if (user == null || token == null ) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
@@ -91,7 +95,7 @@ public class ClientService {
         }
 
         try {
-            clientBean.editarCliente(id, dto);
+            clientBean.editarCliente(dto.getId(), dto);
             return Response.status(200).entity("Cliente atualizado com sucesso").build();
         } catch (Exception e) {
             return Response.status(409).entity(e.getMessage()).build();
