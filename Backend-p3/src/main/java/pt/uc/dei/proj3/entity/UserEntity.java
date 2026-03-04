@@ -2,7 +2,6 @@ package pt.uc.dei.proj3.entity;
 
 import jakarta.persistence.*;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -156,11 +155,11 @@ public class UserEntity implements Serializable {
         this.fotoUrl = fotoUrl;
     }
 
-    public void setAdmin(boolean admin) {
+    public void setIsAdmin(boolean admin) {
         this.isAdmin = admin;
     }
 
-    public void setAtivo(boolean ativo) {
+    public void setIsAtivo(boolean ativo) {
         this.isAtivo = ativo;
     }
 

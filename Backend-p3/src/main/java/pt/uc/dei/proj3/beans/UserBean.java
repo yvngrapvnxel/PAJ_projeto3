@@ -7,7 +7,6 @@ import pt.uc.dei.proj3.dao.TokenDao;
 import pt.uc.dei.proj3.dto.UserDto;
 import pt.uc.dei.proj3.entity.TokenEntity;
 import pt.uc.dei.proj3.entity.UserEntity;
-import pt.uc.dei.proj3.pojo.UserPojo;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
@@ -64,21 +63,14 @@ public class UserBean implements Serializable {
     }
 
     public boolean validarToken(String username, String tokenLimpo) {
-        if (username == null || tokenLimpo == null) return false;
-
-        UserEntity u = userDao.findUserByUsername(username);
-        if (u == null || !u.isAtivo()) return false;
+        if (username == null || tokenLimpo == null || username.trim().isEmpty() || tokenLimpo.trim().isEmpty()) return false;
 
         // Para validar, temos de encriptar o token limpo que o postman enviou
         String tokenRecebidoEncriptado = encriptar(tokenLimpo);
 
-        // Verifica na lista de tokens do utilizador se algum coincide e se ainda é válido
-        for (TokenEntity t : u.getTokens()) {
-            if (t.getToken().equals(tokenRecebidoEncriptado) && t.getExpireTime().isAfter(LocalDateTime.now())) {
-                return true; // Token é válido!
-            }
-        }
-        return false;
+        UserEntity u = userDao.findUserByToken(tokenRecebidoEncriptado);
+
+        return (u != null && u.getUsername().equals(username) && u.isAtivo());
     }
 
     public boolean register(UserDto newUser) {
@@ -96,20 +88,20 @@ public class UserBean implements Serializable {
         user.setFotoUrl(newUser.getFotoUrl());
         user.setUsername(newUser.getUsername());
         user.setPassword(newUser.getPassword());
-        user.setAtivo(true); // Fica logo ativo
+        user.setIsAtivo(true); // Fica logo ativo
 
         userDao.persist(user); // Guarda na BD
         return true;
     }
 
-    public UserPojo findUser(String username) {
+    public UserDto findUser(String username) {
         UserEntity entity = userDao.findUserByUsername(username);
         if (entity == null || !entity.isAtivo()) return null;
 
-        return converterParaPojo(entity);
+        return converterParaDto(entity);
     }
 
-    public void updateUser(String username, UserPojo newData) {
+    public void updateUser(String username, UserDto newData) {
         UserEntity u = userDao.findUserByUsername(username);
         if (u == null || !u.isAtivo()) return;
 
@@ -127,15 +119,15 @@ public class UserBean implements Serializable {
     }
 
     // Função auxiliar para mapear de Entity (BD) para Pojo (Frontend)
-    private UserPojo converterParaPojo(UserEntity e) {
-        UserPojo pojo = new UserPojo();
-        pojo.setId(e.getId().intValue());
-        pojo.setPrimeiroNome(e.getPrimeiroNome());
-        pojo.setUltimoNome(e.getUltimoNome());
-        pojo.setEmail(e.getEmail());
-        pojo.setTelefone(e.getTelefone());
-        pojo.setUsername(e.getUsername());
-        pojo.setFotoUrl(e.getFotoUrl());
-        return pojo;
+    private UserDto converterParaDto(UserEntity e) {
+        UserDto dto = new UserDto();
+        dto.setId(e.getId().intValue());
+        dto.setPrimeiroNome(e.getPrimeiroNome());
+        dto.setUltimoNome(e.getUltimoNome());
+        dto.setEmail(e.getEmail());
+        dto.setTelefone(e.getTelefone());
+        dto.setUsername(e.getUsername());
+        dto.setFotoUrl(e.getFotoUrl());
+        return dto;
     }
 }

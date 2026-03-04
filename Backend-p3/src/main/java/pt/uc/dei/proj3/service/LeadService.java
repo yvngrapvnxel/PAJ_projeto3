@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.LeadBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.LeadDto;
-import pt.uc.dei.proj3.pojo.LeadPojo;
 
              //test
 import java.util.List;

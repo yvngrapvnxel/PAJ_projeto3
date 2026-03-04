@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.ClientBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.ClientDto;
-import pt.uc.dei.proj3.pojo.ClientPojo;
 import java.util.List;
 
 @Path("/clientes")

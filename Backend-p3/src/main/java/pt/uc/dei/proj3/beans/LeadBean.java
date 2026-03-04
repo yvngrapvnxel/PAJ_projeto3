@@ -15,8 +15,6 @@ import java.util.ArrayList;
 @Stateless
 public class LeadBean implements Serializable {
 
-    @Inject
-    StorageBean storageBean;
 
     // Criar Lead
 

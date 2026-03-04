@@ -10,7 +10,7 @@ public class TokenBean implements Serializable {
     private String token; // = UUID.randomUUID().toString();
 
 
-    public static String generateToken (){
+    public static String generateToken() {
         SecureRandom sr = new SecureRandom();
         byte[] token = new byte[16];
         sr.nextBytes(token);

@@ -6,13 +6,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.UserDto;
-import pt.uc.dei.proj3.pojo.UserPojo;
 
 @Path("/users")
 public class UserService {
 
     @Inject
     private UserBean userBean;
+
+    //add metodo validacao token
+    //add metodo get id pelo token
 
     @POST
     @Path("/login")
@@ -62,7 +64,7 @@ public class UserService {
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserProfile(@PathParam("username") String username) {
-        UserPojo user = userBean.findUser(username); // Você pode criar este atalho no UserBean
+        UserDto user = userBean.findUser(username); // Você pode criar este atalho no UserBean
 
         if (user == null) {
             return Response.status(400).entity("User not found").build(); // [cite: 169]
@@ -79,7 +81,7 @@ public class UserService {
             @PathParam("username") String userAAlterar, // O nome que vem no URL
             @HeaderParam("username") String userAuth,   // O nome que vem no Header
             @HeaderParam("token") String tokenAuth,     // O token que vem no Header (substituiu a password)
-            UserPojo dadosNovos) {
+            UserDto dadosNovos) {
 
         // PASSO 1: Verificar se os Headers existem (ERRO 401)
         if (userAuth == null || tokenAuth == null || userAuth.trim().isEmpty() || tokenAuth.trim().isEmpty()) {

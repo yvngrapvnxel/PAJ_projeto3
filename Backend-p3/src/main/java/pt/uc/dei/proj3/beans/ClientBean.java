@@ -14,9 +14,6 @@ import java.util.List;
 @Stateless
 public class ClientBean implements Serializable {
 
-    @Inject
-    StorageBean storageBean;
-
     public ClientPojo registarCliente(ClientDto newClient, String usernameDono) throws Exception {
 
         if (existeClienteGlobal(newClient.getNome(),newClient.getEmpresa())){
