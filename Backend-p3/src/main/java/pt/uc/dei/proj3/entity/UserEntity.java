@@ -112,6 +112,15 @@ public class UserEntity implements Serializable {
         return isAdmin;
     }
 
+    public boolean isAtivo() {
+        return isAtivo;
+    }
+
+    public List<TokenEntity> getTokens() {
+        return tokens;
+    }
+
+
 
     // setters
 
@@ -145,5 +154,17 @@ public class UserEntity implements Serializable {
 
     public void setFotoUrl(String fotoUrl) {
         this.fotoUrl = fotoUrl;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.isAdmin = admin;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.isAtivo = ativo;
+    }
+
+    public void setTokens(List<TokenEntity> tokens) {
+        this.tokens = tokens;
     }
 }

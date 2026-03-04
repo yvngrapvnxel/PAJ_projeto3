@@ -23,4 +23,17 @@ public abstract class DefaultDao<T extends Serializable> implements Serializable
     public DefaultDao(Class<T> clazz) {
         this.clazz = clazz;
     }
+
+    // Adiciona estes métodos dentro do DefaultDao.java
+    public void persist(T entity) {
+        em.persist(entity);
+    }
+
+    public T merge(T entity) {
+        return em.merge(entity);
+    }
+
+    public void remove(T entity) {
+        em.remove(em.contains(entity) ? entity : em.merge(entity));
+    }
 }
