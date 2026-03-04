@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ClientDto {
-    private int id;
+    private long id;
     private String nome;
     private String email;
     private String telefone;
@@ -16,7 +16,7 @@ public class ClientDto {
 
     // Getters e Setters
     @XmlElement
-    public int getId() { return id; }
+    public long getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     @XmlElement

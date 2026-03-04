@@ -3,9 +3,12 @@ package pt.uc.dei.proj3.beans;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import pt.uc.dei.proj3.dao.ClienteDao;
+import pt.uc.dei.proj3.dao.UserDao;
 import pt.uc.dei.proj3.dto.ClientDto;
-import pt.uc.dei.proj3.pojo.ClientPojo;
-import pt.uc.dei.proj3.pojo.UserPojo;
+import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.entity.ClienteEntity;
+import pt.uc.dei.proj3.entity.UserEntity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,75 +17,52 @@ import java.util.List;
 @Stateless
 public class ClientBean implements Serializable {
 
-    public ClientPojo registarCliente(ClientDto newClient, String usernameDono) throws Exception {
+    @Inject
+    ClienteDao clienteDao;
 
-        if (existeClienteGlobal(newClient.getNome(),newClient.getEmpresa())){
+    @Inject
+    UserDao userDao;
+
+    public ClientDto registarCliente(ClientDto newClient, String usernameDono) throws Exception {
+
+        UserEntity u = UserDao.findUserByUsername(usernameDono);
+
+        if ( u == null ) return null;
+
+        if (clienteDao.existsByNomeAndEmpresa(newClient.getNome(),newClient.getEmpresa())){
             throw new Exception("Este cliente já está registado nesta empresa.");
         }
 
-        // Chama o método genérico do StorageBean para obter o ID
-        // Passamos a lista de todos os clientes do sistema e a regra para ler o ID
-        int nextId = storageBean.generateNextId(
-                storageBean.getUsers().stream()
-                    .flatMap(u -> u.getMeusClientes().stream())
-                    .toList(), ClientPojo::getId);
+        clienteDao.guardaCliente(newClient, u);
 
-        ClientPojo finalClient = new ClientPojo();
-
-        finalClient.setId(nextId);
-        finalClient.setNome(newClient.getNome());
-        finalClient.setEmail(newClient.getEmail());
-        finalClient.setTelefone(newClient.getTelefone());
-        finalClient.setEmpresa(newClient.getEmpresa());
-        finalClient.setDono(usernameDono);
-
-        storageBean.addCliente(finalClient, usernameDono);
-
-        return finalClient;
+        return newClient;
     }
 
-    public boolean existeClienteGlobal(String nome, String empresa) {
-        List<UserPojo> todosUsers = storageBean.getUsers();
+    public ClientDto editarCliente(Long idCliente, ClientDto dtoNovo) throws Exception {
 
-        // Percorre todos os utilizadores e as suas listas internas de clientes
-        for (UserPojo u : todosUsers) {
-            for (ClientPojo c : u.getMeusClientes()) {
-                if (c.getNome().equalsIgnoreCase(nome) && c.getEmpresa().equalsIgnoreCase(empresa)) {
-                    return true; // Encontrou duplicado em algum utilizador
-                }
-            }
+        ClienteEntity clienteAtual = clienteDao.findClienteById(idCliente);
+
+        // Se não existir ou se estiver apagado (soft delete), não podemos editar
+        if (clienteAtual == null || !clienteAtual.isAtivo()) {
+            throw new Exception("Cliente não encontrado ou inativo.");
         }
-        return false;
-    }
 
-    // Adiciona este novo método logo abaixo do existeClienteGlobal
-    public boolean existeClienteGlobalParaEdicao(int idAtual, String nome, String empresa) {
-        List<UserPojo> todosUsers = storageBean.getUsers();
-        for (UserPojo u : todosUsers) {
-            for (ClientPojo c : u.getMeusClientes()) {
-                // Se encontrar o mesmo nome e empresa...
-                if (c.getNome().equalsIgnoreCase(nome) && c.getEmpresa().equalsIgnoreCase(empresa)) {
-                    // ...verifica se é o próprio cliente. Se o ID for diferente, é um duplicado real!
-                    if (c.getId() != idAtual) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    // Substitui o teu método editarCliente por este:
-    public void editarCliente(int id, ClientDto dto) throws Exception {
-        // Agora usamos o novo método que ignora o próprio cliente
-        if (existeClienteGlobalParaEdicao(id, dto.getNome(), dto.getEmpresa())){
+        // 2. Verifica se a nova combinação de Nome/Empresa já existe noutro cliente diferente
+        // Usamos o método "ForEdit" para não dar erro se ele mantiver o próprio Nome e Empresa
+        if (clienteDao.existsByNomeAndEmpresaForEdit(idCliente, dtoNovo.getNome(), dtoNovo.getEmpresa())) {
             throw new Exception("Este cliente já está registado nesta empresa.");
         }
-        storageBean.updateClientData(id, dto);
+
+        // 3. Manda para o DAO atualizar a entidade
+        clienteDao.atualizaCliente(clienteAtual, dtoNovo);
+
+        return dtoNovo;
     }
 
-    public List<ClientPojo> listClients(String username) {
-        UserPojo user = storageBean.findUser(username);
+    public List<ClientDto> listClients(String username) {
+
+
+        UserDto user = storageBean.findUser(username);
         return (user != null) ? user.getMeusClientes() : new ArrayList<>();
     }
 
