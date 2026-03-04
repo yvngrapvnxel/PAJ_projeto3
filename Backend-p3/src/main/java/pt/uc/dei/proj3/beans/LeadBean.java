@@ -4,6 +4,7 @@ package pt.uc.dei.proj3.beans;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import pt.uc.dei.proj3.dto.LeadDto;
+import pt.uc.dei.proj3.entity.LeadEntity;
 import pt.uc.dei.proj3.pojo.LeadPojo;
 import pt.uc.dei.proj3.pojo.UserPojo;
 
@@ -18,21 +19,18 @@ public class LeadBean implements Serializable {
 
     // Criar Lead
 
-    public LeadPojo createLead(String username, LeadDto leadDto) {
+    public LeadDto createLead(String username, LeadDto leadDto) {
 
-        int nextId = storageBean.generateNextId(
-                storageBean.getUsers().stream()
-                        .flatMap(u -> u.getMeusLeads().stream())
-                        .toList(), LeadPojo::getId);
-        LeadPojo novaLead = new LeadPojo();
 
-        novaLead.setId(nextId);
+        LeadDto novaLead = new LeadDto();
+
         novaLead.setTitulo(leadDto.getTitulo());
         novaLead.setDescricao(leadDto.getDescricao());
         novaLead.setEstado(leadDto.getEstado());
-        novaLead.setDataCriacao(LocalDate.now());
 
-        storageBean.addLeads(novaLead,username);
+        // get user by username? add lead to lista leads?
+
+        //storageBean.addLeads(novaLead,username);
 
         return novaLead;
 

@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class UserDto {
-    private int id;
+    private Long id;
     private String username;
     private String password;
     private String primeiroNome;
@@ -71,10 +71,10 @@ public class UserDto {
     }
 
     @XmlElement
-    public int getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

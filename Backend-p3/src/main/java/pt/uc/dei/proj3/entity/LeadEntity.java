@@ -19,6 +19,7 @@ public class LeadEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
 
 
@@ -65,7 +66,7 @@ public class LeadEntity implements Serializable {
         return isAtivo;
     }
 
-    public void setAtivo(boolean ativo) {
+    public void setIsAtivo(boolean ativo) {
         isAtivo = ativo;
     }
 
@@ -95,10 +96,6 @@ public class LeadEntity implements Serializable {
 
     public LocalDate getDataCriacao() {
         return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
     }
 
     public UserEntity getUser() {

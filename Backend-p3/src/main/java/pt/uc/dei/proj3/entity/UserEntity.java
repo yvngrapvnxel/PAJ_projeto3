@@ -123,10 +123,6 @@ public class UserEntity implements Serializable {
 
     // setters
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setPrimeiroNome(String primeiroNome) {
         this.primeiroNome = primeiroNome;
     }

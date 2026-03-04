@@ -6,9 +6,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.LeadBean;
 import pt.uc.dei.proj3.beans.UserBean;
+import pt.uc.dei.proj3.dao.LeadDao;
 import pt.uc.dei.proj3.dto.LeadDto;
+import pt.uc.dei.proj3.dto.UserDto;
 
-             //test
+//test
 import java.util.List;
 
 @Path("/leads")
@@ -36,7 +38,7 @@ public class LeadService {
         }
 
         try {
-            LeadPojo novo = leadBean.createLead(username, leadDto);
+            UserDto novo = leadBean.createLead(username, leadDto);
             return Response.status(201).entity(novo).build();
         } catch (Exception e) {
             return Response.status(409).entity(e.getMessage()).build();
@@ -52,7 +54,7 @@ public class LeadService {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
-        List<LeadPojo> leads = leadBean.getLeads(username);
+        List<LeadDto> leads = leadBean.getLeads(username);
         return Response.status(200).entity(leads).build();
     }
 

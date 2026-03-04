@@ -4,14 +4,21 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import pt.uc.dei.proj3.beans.TokenBean;
 import pt.uc.dei.proj3.beans.UserBean;
+import pt.uc.dei.proj3.dto.TokenDto;
 import pt.uc.dei.proj3.dto.UserDto;
+
+import java.util.Collections;
 
 @Path("/users")
 public class UserService {
 
     @Inject
-    private UserBean userBean;
+    UserBean userBean;
+
+    @Inject
+    TokenBean tokenBean;
 
     //add metodo validacao token
     //add metodo get id pelo token
@@ -23,7 +30,7 @@ public class UserService {
     public Response login(UserDto user) {
         // Validação básica de campos vazios
         if (user.getUsername() == null || user.getPassword() == null) {
-            return Response.status(401).entity("Dados incompletos").build();
+            return Response.status(401).entity("Dados incompletos!").build();
         }
 
         // Chama o novo método que retorna o token
@@ -31,78 +38,63 @@ public class UserService {
 
         if (token != null) {
             // Devolve o token ao utilizador em formato JSON
-            return Response.status(200).entity("{\"token\": \"" + token + "\"}").build();
+            return Response.status(200).entity(Collections.singletonMap("token", token)).build();
         }
 
         // Se a autenticação falhar [cite: 115]
-        return Response.status(401).entity("Wrong Username or Password!").build();
+        return Response.status(401).entity("Dados incorretos!").build();
     }
+
 
     @POST
     @Path("/logout")
     public Response logout() {
-        // endpoint e retorna 200 Success .
+        // endpoint e retorna 200 Success
         return Response.status(200).build();
     }
+
 
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(UserDto newUser) {
-        // O registo deve retornar 201 em caso de sucesso [cite: 139]
         boolean success = userBean.register(newUser);
 
-        if (success) {
-            return Response.status(201).entity("User registered successfully").build();
-        }
+        if (!success) return Response.status(400).entity("Ocorreu um erro no registo de utilizador.").build(); // [cite: 141]
 
-        return Response.status(400).entity("Registration failed").build(); // [cite: 141]
+        // O registo deve retornar 201 em caso de sucesso [cite: 139]
+        return Response.status(201).entity("Utilizador registado com sucesso!").build();
     }
 
     @GET
-    @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserProfile(@PathParam("username") String username) {
-        UserDto user = userBean.findUser(username); // Você pode criar este atalho no UserBean
+    public Response getUserProfile(@HeaderParam("token") String token) {
+
+        UserDto user = userBean.getUserByToken(token);
 
         if (user == null) {
-            return Response.status(400).entity("User not found").build(); // [cite: 169]
+            return Response.status(400).entity("Utilizador não encontrado.").build(); // [cite: 169]
         }
 
         return Response.status(200).entity(user).build(); // [cite: 168]
     }
 
     @POST // Nota: Pelas boas práticas RESTful[cite: 129], para atualizações deves considerar usar @PUT em vez de @POST
-    @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateProfile(
-            @PathParam("username") String userAAlterar, // O nome que vem no URL
-            @HeaderParam("username") String userAuth,   // O nome que vem no Header
-            @HeaderParam("token") String tokenAuth,     // O token que vem no Header (substituiu a password)
-            UserDto dadosNovos) {
+    public Response updateProfile(@HeaderParam("token") String token,
+                                    UserDto dadosNovos) {
 
         // PASSO 1: Verificar se os Headers existem (ERRO 401)
-        if (userAuth == null || tokenAuth == null || userAuth.trim().isEmpty() || tokenAuth.trim().isEmpty()) {
+        if (token == null || token.trim().isEmpty()) {
             // Retorna 401 se os dados do Header (token) não forem enviados
-            return Response.status(401).entity("Faltam credenciais no Header (username ou token)").build();
-        }
-
-        // PASSO 2: Verificar se o token é válido (ERRO 403)
-        if (!userBean.validarToken(userAuth, tokenAuth)) {
-            // Retorna 403 se a autenticação (verificação do token) falhar
-            return Response.status(403).entity("Credenciais (Token) inválidas").build();
-        }
-
-        // PASSO 3: Verificar se o utilizador está a tentar alterar o seu próprio perfil (ERRO 403)
-        if (!userAuth.equals(userAAlterar)) {
-            // Retorna 403 porque um utilizador não pode alterar o perfil de outro
-            return Response.status(403).entity("Não podes alterar dados de outros utilizadores").build();
+            return Response.status(401).entity("O seu token é inválido ou não existe.").build();
         }
 
         // Se passar tudo, então grava...
-        userBean.updateUser(userAAlterar, dadosNovos);
+        boolean isUpdated = userBean.updateUser(token, dadosNovos);
+        if (!isUpdated) return Response.status(403).entity("Ocorreu um erro ao atualizar o perfil.").build();
         return Response.status(200).entity("Perfil atualizado com sucesso!").build();
     }
 

@@ -1,9 +1,12 @@
 package pt.uc.dei.proj3.beans;
 
+import jakarta.ejb.Stateless;
+
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+@Stateless
 public class TokenBean implements Serializable {
 
 
@@ -24,4 +27,5 @@ public class TokenBean implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
+
 }
