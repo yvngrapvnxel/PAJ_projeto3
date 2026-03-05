@@ -5,9 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 
 @Entity
@@ -21,7 +19,7 @@ public class TokenEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false, updatable = false) // FK
-    private UserEntity user;
+    private UserEntity users;
 
     @Id
     @Column(name="token", nullable = false, updatable = false)
@@ -39,11 +37,11 @@ public class TokenEntity implements Serializable {
     // --- MÉTODOS
 
     public Long getUserId() {
-        return user.getId();
+        return users.getId();
     }
 
     public void setUserId(UserEntity user) {
-        this.user = user;
+        this.users = user;
     }
 
     public String getToken() {

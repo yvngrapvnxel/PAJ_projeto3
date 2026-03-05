@@ -2,15 +2,17 @@ package pt.uc.dei.proj3.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 
 @Entity
-@Table(name="user")
+@Table(name="users")
 // named queries
 public class UserEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     // --- COLUNAS
@@ -58,13 +60,13 @@ public class UserEntity implements Serializable {
 
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "users")
     private List<TokenEntity> tokens;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "users")
     private List<ClienteEntity> clientes;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "users")
     private List<LeadEntity> leads;
 
 

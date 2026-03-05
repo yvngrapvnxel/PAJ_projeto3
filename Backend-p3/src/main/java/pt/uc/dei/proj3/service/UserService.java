@@ -60,6 +60,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(UserDto newUser) {
+        System.out.println("chegou ao backend");
         boolean success = userBean.register(newUser);
 
         if (!success) return Response.status(400).entity("Ocorreu um erro no registo de utilizador.").build(); // [cite: 141]

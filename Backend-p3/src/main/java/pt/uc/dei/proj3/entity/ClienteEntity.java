@@ -37,7 +37,7 @@ public class ClienteEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false) // FK
-    private UserEntity user;
+    private UserEntity users;
 
 
 
@@ -93,10 +93,10 @@ public class ClienteEntity implements Serializable {
     }
 
     public UserEntity getUser() {
-        return user;
+        return users;
     }
 
     public void setUser(UserEntity user) {
-        this.user = user;
+        this.users = user;
     }
 }

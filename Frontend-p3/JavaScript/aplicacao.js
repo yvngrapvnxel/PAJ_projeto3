@@ -30,7 +30,7 @@ function loadHeader(page) {
     if (currentPage.includes("login.html") || currentPage.includes("register.html")) {
         headerDiv.innerHTML = `
             <header id="header">
-                <img src="/imagens/favicon1.png" class="logo">
+                <img src="../imagens/favicon1.png" class="logo">
                 <h1>Customer Relationship Management</h1>
             </header>
         `;
@@ -42,7 +42,7 @@ function loadHeader(page) {
             <header class="header-app">
                 <div class="header-container">
                     <div class="header-left">
-                        <img src="/imagens/favicon1.png" class="logo">
+                        <img src="../imagens/favicon1.png" class="logo">
                         <h1>Customer Relationship Management</h1>
                     </div>
                 
@@ -121,7 +121,7 @@ async function login(event) {
 
     const usernameInput = document.getElementById("username").value;
     const passwordInput = document.getElementById("password").value;
-    const url = "http://localhost:8080/backend-p2/rest/users/login";
+    const url = "http://localhost:8080/projeto3/rest/users/login";
 
     const dados = {username: usernameInput, password: passwordInput};
 
@@ -133,19 +133,21 @@ async function login(event) {
         });
 
         if (resposta.ok) {
-            const token = await resposta.json();
+            const data = await resposta.json();
+            const token = data.token;
 
-            localStorage.setItem("token", token);
+            localStorage.setItem("token", JSON.stringify(token));
 
-            const profileUrl = `http://localhost:8080/backend-p2/rest/users/profile`;
+            const profileUrl = `http://localhost:8080/projeto3/rest/users/profile`;
             const resProfile = await fetch(profileUrl, {
                 method: 'GET',
-                headers: {'token': token}
+                headers: {'Accept': 'application/json',
+                    'token': token}
             });
             if (resProfile.ok) {
                 const userData = await resProfile.json();
 
-                localStorage.setItem('userFirstName', userData.primeiroNome);
+                localStorage.setItem('userFirstName', JSON.stringify(userData.primeiroNome));
                 window.location.href = "dashboard.html";
             }
         } else {
@@ -160,7 +162,7 @@ async function login(event) {
 async function logout() {
     const token = localStorage.getItem("token");
     try {
-        await fetch("http://localhost:8080/backend-p2/rest/users/logout", {
+        await fetch("http://localhost:8080/projeto3/rest/users/logout", {
             method: 'POST',
             headers: {'token': token}
         });
@@ -185,11 +187,11 @@ async function registar(event) {
         username: document.getElementById("regUsername").value,
         password: document.getElementById("regPassword").value,
         fotoUrl: document.getElementById("regFotoUrl").value,
-        telefone: document.getElementById("regTelefone").value // Campo opcional conforme o teu UserPojo
+        telefone: document.getElementById("regTelefone").value
     };
 
     try {
-        const resposta = await fetch("http://localhost:8080/backend-p2/rest/users/register", {
+        const resposta = await fetch("http://localhost:8080/projeto3/rest/users/register", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(novoUtilizador)
@@ -218,7 +220,7 @@ async function verPerfil() {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`http://localhost:8080/backend-p2/rest/users/profile`, {
+        const response = await fetch(`http://localhost:8080/projeto3/rest/users/profile`, {
             method: 'GET',
             headers: {'token': token}
         });
@@ -298,7 +300,7 @@ async function guardarPerfil() {
     addIfNotEmpty("perfilPassNova", "password");
 
     try {
-        const response = await fetch(`http://localhost:8080/backend-p2/rest/users/save`, {
+        const response = await fetch(`http://localhost:8080/projeto3/rest/users/save`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

@@ -47,6 +47,7 @@ public class UserBean implements Serializable {
     public boolean register(UserDto newUser) {
         // Verifica se já existe alguém com este username na Base de Dados
         if (userDao.checkUsername(newUser.getUsername()) != null) {
+            System.out.println("metodo userbean boolean falso");
             return false;
         }
 
