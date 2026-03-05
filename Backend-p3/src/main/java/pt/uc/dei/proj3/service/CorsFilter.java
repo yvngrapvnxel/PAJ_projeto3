@@ -13,13 +13,14 @@ public class CorsFilter implements ContainerResponseFilter {
     public void filter(ContainerRequestContext requestContext,
                        ContainerResponseContext responseContext) throws IOException {
 
-        // Permite pedidos de qualquer origem (necessário para o fetch do JS funcionar)
         responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
+        // Garanta que todos os headers enviados pelo seu script estão aqui
+        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, username, token, password");
+        responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, PUT, OPTIONS");
 
-        // Permite os métodos que vamos usar
-        responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
-
-        // Permite os Headers customizados (incluindo username e password que o enunciado pede)
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, username, token");
+        // Se o navegador perguntar quais são as regras (OPTIONS), respondemos OK imediatamente
+        if (requestContext.getMethod().equalsIgnoreCase("OPTIONS")) {
+            responseContext.setStatus(200);
+        }
     }
 }

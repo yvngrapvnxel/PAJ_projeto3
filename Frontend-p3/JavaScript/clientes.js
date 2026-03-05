@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/backend-p2/rest/clientes";
+const API_URL = "http://localhost:8080/projeto3/rest/clientes";
 let clienteList = [];
 
 // ==========================================

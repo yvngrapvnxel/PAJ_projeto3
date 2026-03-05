@@ -1,4 +1,4 @@
-const LEADS_API_URL = "http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/leads";
+/*const LEADS_API_URL = "http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/leads";*/
 let leadsList = [];
 
 // Estados (frontend) – index = STATE_ID (como no teu backend atual)
