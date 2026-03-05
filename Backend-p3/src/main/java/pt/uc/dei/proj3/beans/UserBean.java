@@ -54,6 +54,10 @@ public class UserBean implements Serializable {
         return true;
     }
 
+    public void logout(String token) {
+        tokenDao.setExpired(token);
+    }
+
     public UserDto getUser(String username) {
         UserEntity entity = userDao.getUserByUsername(username);
         if (entity == null) return null;

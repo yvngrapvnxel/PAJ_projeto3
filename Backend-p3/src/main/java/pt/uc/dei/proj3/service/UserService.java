@@ -48,7 +48,8 @@ public class UserService {
 
     @POST
     @Path("/logout")
-    public Response logout() {
+    public Response logout(@HeaderParam("token") String token) {
+        userBean.logout(token);
         // endpoint e retorna 200 Success
         return Response.status(200).build();
     }
@@ -68,6 +69,7 @@ public class UserService {
     }
 
     @GET
+    @Path("/profile")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserProfile(@HeaderParam("token") String token) {
 
@@ -80,7 +82,8 @@ public class UserService {
         return Response.status(200).entity(user).build(); // [cite: 168]
     }
 
-    @POST // Nota: Pelas boas práticas RESTful[cite: 129], para atualizações deves considerar usar @PUT em vez de @POST
+    @PATCH
+    @Path("/save")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateProfile(@HeaderParam("token") String token,
