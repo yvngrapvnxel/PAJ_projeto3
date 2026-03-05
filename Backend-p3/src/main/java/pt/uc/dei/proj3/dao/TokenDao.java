@@ -58,8 +58,9 @@ public class TokenDao extends DefaultDao<TokenEntity> implements Serializable {
     public UserEntity getUserByToken(String token) {
         if (token == null) return null;
 
+        String tokenEncriptado = encriptar(token);
+
         try {
-            String tokenEncriptado = encriptar(token);
             // Faz um JOIN com a tabela de tokens para encontrar o dono do token válido
             return em.createQuery(
                             "SELECT u FROM UserEntity u JOIN u.tokens t WHERE t.token = :token AND t.expireTime > CURRENT_TIMESTAMP AND u.isAtivo",
@@ -71,5 +72,12 @@ public class TokenDao extends DefaultDao<TokenEntity> implements Serializable {
         }
     }
 
+    public void setExpired(String token) {
+        String tokenEncriptado = encriptar(token);
+
+        em.createQuery("UPDATE TokenEntity t SET t.expireTime = CURRENT_TIMESTAMP WHERE t.token = :token")
+                .setParameter("token", tokenEncriptado)
+                .executeUpdate();
+    }
 
 }

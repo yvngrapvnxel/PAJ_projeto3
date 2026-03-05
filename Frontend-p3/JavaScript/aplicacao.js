@@ -6,17 +6,17 @@ console.log("Aplicação iniciada.")
 const content = document.getElementById("content");
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+
     const form = document.getElementById("loginForm");
 
     const regForm = document.getElementById("registerForm");
-    
+
     if (form) {
         form.addEventListener("submit", login);
     }
     if (regForm) {
-    regForm.addEventListener("submit", registar);
-}
+        regForm.addEventListener("submit", registar);
+    }
 
 
 });
@@ -36,7 +36,7 @@ function loadHeader(page) {
         `;
     } else {
 
-        const firstName = sessionStorage.getItem("userFirstName") || "Utilizador";
+        const firstName = localStorage.getItem("userFirstName") || "Utilizador";
         headerDiv.innerHTML = `
         
             <header class="header-app">
@@ -60,7 +60,7 @@ function loadHeader(page) {
     }
 }
 
-function loadAside(){
+function loadAside() {
     const asideDiv = document.getElementById("aside");
 
     asideDiv.innerHTML = `
@@ -78,7 +78,7 @@ function loadAside(){
 
 function loadFooter() {
     const footerDiv = document.getElementById("footer");
-    
+
     // Adicionamos um parágrafo limpo e uma mensagem mais profissional
     footerDiv.innerHTML = `<p>${new Date().getFullYear()} © Customer Relationship Management - Todos os direitos reservados.</p>`;
 }
@@ -86,10 +86,10 @@ function loadFooter() {
 // Funções para carregar as Leads
 
 function loadLeads() {
-  if (window.location.hash !== "#leads") {
-    window.location.hash = "#leads";
-  }
-  carregarLeads();
+    if (window.location.hash !== "#leads") {
+        window.location.hash = "#leads";
+    }
+    carregarLeads();
 }
 
 // Funções para carregar os Clientes
@@ -98,7 +98,7 @@ function loadClientes() {
 
     // Muda a URL lá em cima (ex: dashboard.html#clientes) para ser partilhável
     if (window.location.hash !== "#clientes") {
-        window.location.hash = "#clientes"; 
+        window.location.hash = "#clientes";
     }
 
     content.innerHTML = `
@@ -110,43 +110,44 @@ function loadClientes() {
     <ul id="listaClientes"></ul> 
     <br>
     `;
-    
+
     carregarClientes();
 }
 
 // Funções de login e logout
 
 async function login(event) {
-    if(event) event.preventDefault(); 
+    if (event) event.preventDefault();
 
     const usernameInput = document.getElementById("username").value;
     const passwordInput = document.getElementById("password").value;
-    const url = "http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/users/login";
+    const url = "http://localhost:8080/backend-p2/rest/users/login";
 
-    const dados = { username: usernameInput, password: passwordInput };
+    const dados = {username: usernameInput, password: passwordInput};
 
     try {
         const resposta = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(dados)
         });
 
         if (resposta.ok) {
-            // CORREÇÃO: Usar 'username' para ser compatível com o teu clientes.js
-            sessionStorage.setItem("username", usernameInput);
-            sessionStorage.setItem("password", passwordInput);
-            
-            // Opcional: manter o currentUser se tiveres outras partes a usá-lo
-            localStorage.setItem("currentUser", usernameInput);
+            const token = await resposta.json();
 
-            const profileUrl = `http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/users/${usernameInput}`;
-            const resProfile = await fetch(profileUrl);
-            const userData = await resProfile.json();
+            localStorage.setItem("token", token);
 
-            sessionStorage.setItem("userFirstName", userData.primeiroNome);
-            
-            window.location.href = "dashboard.html";
+            const profileUrl = `http://localhost:8080/backend-p2/rest/users/profile`;
+            const resProfile = await fetch(profileUrl, {
+                method: 'GET',
+                headers: {'token': token}
+            });
+            if (resProfile.ok) {
+                const userData = await resProfile.json();
+
+                localStorage.setItem('userFirstName', userData.primeiroNome);
+                window.location.href = "dashboard.html";
+            }
         } else {
             alert("Credenciais inválidas.");
         }
@@ -157,17 +158,18 @@ async function login(event) {
 }
 
 async function logout() {
+    const token = localStorage.getItem("token");
     try {
-        await fetch("http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/users/logout", {
-            method: 'POST'
+        await fetch("http://localhost:8080/backend-p2/rest/users/logout", {
+            method: 'POST',
+            headers: {'token': token}
         });
     } catch (e) {
         console.error("Erro ao fechar sessão no servidor.");
     }
-    
+
     //apaga TODOS os dados 
     localStorage.clear();
-    sessionStorage.clear();
     console.log("Sessão terminada.");
     window.location.href = "login.html";
 }
@@ -187,9 +189,9 @@ async function registar(event) {
     };
 
     try {
-        const resposta = await fetch("http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/users/register", {
+        const resposta = await fetch("http://localhost:8080/backend-p2/rest/users/register", {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(novoUtilizador)
         });
 
@@ -213,11 +215,13 @@ async function verPerfil() {
         window.location.hash = "#perfil";
     }
 
-    const username = sessionStorage.getItem("username");
-    if (!username) return;
+    const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/users/${username}`);
+        const response = await fetch(`http://localhost:8080/backend-p2/rest/users/profile`, {
+            method: 'GET',
+            headers: {'token': token}
+        });
 
         if (response.ok) {
             const user = await response.json();
@@ -268,48 +272,43 @@ async function verPerfil() {
 }
 
 async function guardarPerfil() {
-    const username = sessionStorage.getItem("username");
     const passAtual = document.getElementById("perfilPassAtual").value;
+    const token = localStorage.getItem("token");
 
-    // Validação de segurança no Frontend
     if (!passAtual) {
         alert("Por favor, insere a tua Password Atual para confirmar as alterações.");
         return;
     }
 
-    const dadosAtualizados = {
-        username: username,
-        primeiroNome: document.getElementById("perfilPrimeiroNome").value.trim(),
-        ultimoNome: document.getElementById("perfilUltimoNome").value.trim(),
-        email: document.getElementById("perfilEmail").value.trim(),
-        telefone: document.getElementById("perfilTelefone").value.trim(),
-        fotoUrl: document.getElementById("perfilFotoUrl").value.trim(),
-        password: document.getElementById("perfilPassNova").value // Vai vazio se o user não quiser mudar
+    const dadosAtualizados = {};
+
+    // função auxiliar que adiciona apenas os elementos que não estão vazios
+    const addIfNotEmpty = (id, key) => {
+        const value = document.getElementById(id).value.trim();
+        if (value) {
+            dadosAtualizados[key] = value;
+        }
     };
 
+    addIfNotEmpty("perfilPrimeiroNome", "primeiroNome");
+    addIfNotEmpty("perfilUltimoNome", "ultimoNome");
+    addIfNotEmpty("perfilEmail", "email");
+    addIfNotEmpty("perfilTelefone", "telefone");
+    addIfNotEmpty("perfilFotoUrl", "fotoUrl");
+    addIfNotEmpty("perfilPassNova", "password");
+
     try {
-        // Atenção: O teu Backend está a usar POST para atualizar o perfil
-        const response = await fetch(`http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/users/${username}`, {
-            method: 'POST',
-            headers: { 
+        const response = await fetch(`http://localhost:8080/backend-p2/rest/users/save`, {
+            method: 'PATCH',
+            headers: {
                 'Content-Type': 'application/json',
-                'username': username,      // Header exigido pelo teu UserService
-                'password': passAtual      // Header exigido pelo teu UserService
+                'token': token,
             },
             body: JSON.stringify(dadosAtualizados)
         });
 
         if (response.ok) {
             alert("Perfil atualizado com sucesso!");
-            
-            const novaUrl = document.getElementById("perfilFotoUrl").value.trim();
-            // Atualiza o "src" da imagem imediatamente! (usa o ícone padrão se o URL estiver vazio)
-            document.getElementById("imgPerfilVisivel").src = novaUrl || '/imagens/favicon1.png';
-
-            // Atualiza a memória e o cabeçalho (que já tinhas)
-            sessionStorage.setItem("userFirstName", dadosAtualizados.primeiroNome);
-            loadHeader(); 
-            
         } else {
             alert("Erro: " + await response.text());
         }
@@ -374,13 +373,13 @@ function roteador() {
 }
 
 // Inicializador
-window.onload = function() {
-    const user = localStorage.getItem("currentUser"); //
+window.onload = function () {
+    const token = localStorage.getItem("token"); //
     const path = window.location.pathname; //
 
-    if (!user && !path.includes("login.html") && !path.includes("register.html")) { //
+    if (!token && !path.includes("login.html") && !path.includes("register.html")) { //
         window.location.href = "login.html"; //
-        return; 
+        return;
     }
 
     loadHeader(); //
@@ -393,6 +392,3 @@ window.onload = function() {
 
 // MAGIA: Faz os botões de "Recuar" e "Avançar" do próprio navegador funcionarem!
 window.addEventListener("hashchange", roteador);
-
-
-
