@@ -54,7 +54,7 @@ public class ClienteDao extends DefaultDao<ClienteEntity> implements Serializabl
                 .getResultList();
     }
 
-    // Lista os clientes APAGADOS de um utilizador (útil para a funcionalidade de restaurar [cite: 98])
+    // Lista os clientes APAGADOS de um utilizador (útil para a funcionalidade de restaurar )
     public List<ClienteEntity> findAllDeletedByUser(UserEntity user) {
         return em.createQuery("SELECT c FROM ClienteEntity c WHERE c.user = :user AND c.isAtivo = false", ClienteEntity.class)
                 .setParameter("user", user)
@@ -80,5 +80,12 @@ public class ClienteDao extends DefaultDao<ClienteEntity> implements Serializabl
                 .setParameter("id", idToIgnore)
                 .getSingleResult();
         return count > 0;
+    }
+
+    public void deletClient(ClienteEntity c){
+
+        c.setAtivo(false); // Apaga de forma lógica (soft delete)
+        merge(c); // Grava a alteração
+
     }
 }

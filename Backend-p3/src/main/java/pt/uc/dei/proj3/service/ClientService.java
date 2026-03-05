@@ -11,7 +11,7 @@ import pt.uc.dei.proj3.dto.UserDto;
 
 import java.util.List;
 
-@Path("/clientes")
+@Path("/me/clients")
 public class ClientService {
 
     @Inject
@@ -21,9 +21,10 @@ public class ClientService {
     private UserBean userBean;
 
     @POST
+    @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addCliente(@HeaderParam("token") String token, ClientDto clienteDto) {
+    public Response addCliente(@HeaderParam("token") String token, ClientDto dto) {
 
         UserDto user = userBean.getUserByToken(token);
 
@@ -34,10 +35,10 @@ public class ClientService {
         }
 
         // 2. Validação básica de campos (Nome e Empresa obrigatórios + pelo menos UM contacto)
-        boolean semNome = clienteDto.getNome() == null || clienteDto.getNome().trim().isEmpty();
-        boolean semEmpresa = clienteDto.getEmpresa() == null || clienteDto.getEmpresa().trim().isEmpty();
-        boolean semEmail = clienteDto.getEmail() == null || clienteDto.getEmail().trim().isEmpty();
-        boolean semTelefone = clienteDto.getTelefone() == null || clienteDto.getTelefone().trim().isEmpty();
+        boolean semNome = dto.getNome() == null || dto.getNome().trim().isEmpty();
+        boolean semEmpresa = dto.getEmpresa() == null || dto.getEmpresa().trim().isEmpty();
+        boolean semEmail = dto.getEmail() == null || dto.getEmail().trim().isEmpty();
+        boolean semTelefone = dto.getTelefone() == null || dto.getTelefone().trim().isEmpty();
 
         if (semNome || semEmpresa || (semEmail && semTelefone)) {
             return Response.status(400).entity("Dados incompletos: Nome, Empresa e pelo menos um contacto (Email ou Telefone) são obrigatórios.").build();
@@ -45,7 +46,7 @@ public class ClientService {
 
         try {
             // 2. Tenta registar (o Bean vai validar duplicados Nome+Empresa e gerar o ID)
-            ClientDto novo = clientBean.registarCliente(clienteDto, user.getUsername());
+            ClientDto novo = clientBean.registarCliente(dto, user.getUsername());
 
             // Retorna 201 Created com o objeto criado
             return Response.status(201).entity(novo).build();
@@ -69,12 +70,14 @@ public class ClientService {
 
         // Retorna a lista de clientes do utilizador logado
         List<ClientDto> clientes = clientBean.listClients(user.getUsername());
+
         return Response.status(200).entity(clientes).build();
     }
 
     @PUT
+    @Path("/edit")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editarCliente(@HeaderParam("token") String token, ClientDto dto) {
+    public Response editClient(@HeaderParam("token") String token, ClientDto dto) {
 
         UserDto user = userBean.getUserByToken(token);
 
@@ -103,23 +106,23 @@ public class ClientService {
     }
 
     @DELETE
-    @Path("/{id}")
-    public Response eliminarCliente(@PathParam("id") int id,
-                                    @HeaderParam("username") String username,
-                                    @HeaderParam("token") String token) {
+    @Path("/remove")
+    public Response removeClient(@HeaderParam("token") String token, ClientDto dto) {
+
+        UserDto user = userBean.getUserByToken(token);
 
         // Verificação de segurança básica
         // 1. Usar o novo método validarToken em vez do login
-        if (username == null || token == null || !userBean.validarToken(username, token)) {
+        if (user == null || token == null ) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
-        boolean sucess = clientBean.deletClient(id);
+        boolean sucess = clientBean.deletClient(dto.getId());
 
         if (sucess) {
             return Response.status(200).entity("Cliente removido com sucesso").build();
         } else {
-            return Response.status(404).entity("Cliente não encontrado com o ID: " + id).build();
+            return Response.status(404).entity("Cliente não encontrado com o ID: " + dto.getId()).build();
         }
     }
 }

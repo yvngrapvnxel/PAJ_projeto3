@@ -25,7 +25,7 @@ public class ClientBean implements Serializable {
 
     public ClientDto registarCliente(ClientDto newClient, String usernameDono) throws Exception {
 
-        UserEntity u = UserDao.findUserByUsername(usernameDono);
+        UserEntity u = userDao.getUserByUsername(usernameDono);
 
         if ( u == null ) return null;
 
@@ -38,7 +38,7 @@ public class ClientBean implements Serializable {
         return newClient;
     }
 
-    public ClientDto editarCliente(Long idCliente, ClientDto dtoNovo) throws Exception {
+    public boolean editarCliente(Long idCliente, ClientDto dtoNovo) throws Exception {
 
         ClienteEntity clienteAtual = clienteDao.findClienteById(idCliente);
 
@@ -56,18 +56,46 @@ public class ClientBean implements Serializable {
         // 3. Manda para o DAO atualizar a entidade
         clienteDao.atualizaCliente(clienteAtual, dtoNovo);
 
-        return dtoNovo;
+        return true;
     }
 
     public List<ClientDto> listClients(String username) {
 
+        UserEntity user = userDao.getUserByUsername(username);
 
-        UserDto user = storageBean.findUser(username);
-        return (user != null) ? user.getMeusClientes() : new ArrayList<>();
+        if (user == null) return new ArrayList<>();
+
+        List<ClienteEntity> entidades = clienteDao.findAllActiveByUser(user);
+
+        List<ClientDto> myClients = new ArrayList<>();
+
+        for(ClienteEntity e : entidades){
+            myClients.add(converForDto(e));
+        }
+        return myClients;
+
     }
 
-    public boolean deletClient(int id) {
-        return storageBean.deletClient(id);
+    public boolean deletClient(long id) {
+        ClienteEntity clienteAtual = clienteDao.findClienteById(id);
+
+        if (clienteAtual == null || !clienteAtual.isAtivo()) return false;
+
+        clienteDao.deletClient(clienteAtual);
+        return true;
+
+    }
+
+    public ClientDto converForDto(ClienteEntity e){
+        ClientDto c = new ClientDto();
+        c.setId(e.getId().longValue());
+        c.setNome(e.getNome());
+        c.setTelefone(e.getTelefone());
+        c.setEmail(e.getEmail());
+        c.setEmpresa(e.getEmpresa());
+        c.setDono(e.getUser().getUsername());
+
+        return c;
     }
 
 }

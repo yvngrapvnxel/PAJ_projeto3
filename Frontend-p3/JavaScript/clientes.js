@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/clientes";
+const API_URL = "http://localhost:8080/backend-p2/rest/clientes";
 let clienteList = [];
 
 // ==========================================
@@ -6,14 +6,17 @@ let clienteList = [];
 // ==========================================
 
 async function carregarClientes() {
-    const username = sessionStorage.getItem("username");
-    const password = sessionStorage.getItem("password");
-    if (!username) return;
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Sessão expirada ou utilizador não autenticado.");
+        return 
+    };
 
     try {
         const response = await fetch(API_URL, {
             method: "GET",
-            headers: { "username": username, "password": password }
+            headers: { "token": token }
         });
 
         if (response.ok) {
@@ -142,25 +145,30 @@ async function guardarCliente(index = null) {
     if (email !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("Email inválido."); return; }
 
     const dados = { nome, email, telefone, empresa };
-    const username = sessionStorage.getItem("username");
-    const password = sessionStorage.getItem("password");
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Sessão expirada ou utilizador não autenticado.");
+        return;
+    }
 
     let response;
 
     try {
         if (index === null) {
             // POST: Novo Cliente
-            response = await fetch(API_URL, {
+            response = await fetch(`${API_URL}/add`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "username": username , "password": password},
+                headers: { "Content-Type": "application/json", "token": token },
                 body: JSON.stringify(dados)
             });
         } else {
             // PUT: Editar Cliente
-            const idGlobal = clienteList[index].id; 
-            response = await fetch(`${API_URL}/${idGlobal}`, {
+            dados.id = clienteList[index].id; // IMPORTANTE: O backend precisa do ID dentro do DTO
+            
+            response = await fetch(`${API_URL}/edit`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json", "username": username , "password": password},
+                headers: { "Content-Type": "application/json", "token": token },
                 body: JSON.stringify(dados)
             });
         }
@@ -180,15 +188,21 @@ async function removerCliente(index) {
     if (!confirm("Tem a certeza que deseja remover este cliente?")) return;
     
     const idGlobal = clienteList[index].id; 
-    const username = sessionStorage.getItem("username");
-    const password = sessionStorage.getItem("password"); 
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Sessão expirada ou utilizador não autenticado.");
+        return;
+    }
+
+    // Construir um objeto com o ID para enviar no corpo do DELETE
+    const dados = { id: idGlobal };
 
     try {
-        const response = await fetch(`${API_URL}/${idGlobal}`, {
+        const response = await fetch(`${API_URL}/remove`, {
             method: "DELETE",
-            headers: { "username": username ,
-                        "password": password
-            }
+            headers: { "Content-Type": "application/json", "token": token},
+            body: JSON.stringify( dados ) // O backend espera um JSON com o ID para remover
         });
 
         if (response.ok) {
