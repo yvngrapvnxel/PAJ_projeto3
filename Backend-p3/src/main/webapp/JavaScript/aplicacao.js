@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-function loadHeader(page) {
+function loadHeader() {
     const headerDiv = document.getElementById("header");
     const currentPage = window.location.pathname;
 
@@ -30,7 +30,7 @@ function loadHeader(page) {
     if (currentPage.includes("login.html") || currentPage.includes("register.html")) {
         headerDiv.innerHTML = `
             <header id="header">
-                <img src="../imagens/favicon1.png" class="logo">
+                <img src="./imagens/favicon1.png" class="logo" alt="">
                 <h1>Customer Relationship Management</h1>
             </header>
         `;
@@ -42,7 +42,7 @@ function loadHeader(page) {
             <header class="header-app">
                 <div class="header-container">
                     <div class="header-left">
-                        <img src="../imagens/favicon1.png" class="logo">
+                        <img src="./imagens/favicon1.png" class="logo" alt="">
                         <h1>Customer Relationship Management</h1>
                     </div>
                 
@@ -60,7 +60,7 @@ function loadHeader(page) {
     }
 }
 
-function loadAside() {
+/*function loadAside() {
     const asideDiv = document.getElementById("aside");
 
     asideDiv.innerHTML = `
@@ -74,7 +74,7 @@ function loadAside() {
             <button onclick="loadTarefas()">Tarefas</button>
         </aside>
     `
-}
+}*/
 
 function loadFooter() {
     const footerDiv = document.getElementById("footer");
@@ -96,7 +96,7 @@ function loadLeads() {
 
 function loadClientes() {
 
-    // Muda a URL lá em cima (ex: dashboard.html#clientes) para ser partilhável
+    // Muda a URL lá em cima (ex: index.html#clientes) para ser partilhável
     if (window.location.hash !== "#clientes") {
         window.location.hash = "#clientes";
     }
@@ -136,7 +136,7 @@ async function login(event) {
             const data = await resposta.json();
             const token = data.token;
 
-            localStorage.setItem("token", JSON.stringify(token));
+            localStorage.setItem("token", token);
 
             const profileUrl = `http://localhost:8080/projeto3/rest/users/profile`;
             const resProfile = await fetch(profileUrl, {
@@ -147,8 +147,8 @@ async function login(event) {
             if (resProfile.ok) {
                 const userData = await resProfile.json();
 
-                localStorage.setItem('userFirstName', JSON.stringify(userData.primeiroNome));
-                window.location.href = "dashboard.html";
+                localStorage.setItem('userFirstName', userData.primeiroNome);
+                window.location.href = "index.html";
             }
         } else {
             alert("Credenciais inválidas.");
