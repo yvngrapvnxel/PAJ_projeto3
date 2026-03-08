@@ -261,9 +261,7 @@ async function guardarLead(id = null) {
       response = await fetch(LEADS_API_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          username,
-          password,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(dados),
       });
@@ -272,9 +270,7 @@ async function guardarLead(id = null) {
       response = await fetch(`${LEADS_API_URL}/${id}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
-          username,
-          password,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(dados),
       });

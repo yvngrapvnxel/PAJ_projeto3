@@ -1,29 +1,38 @@
 package pt.uc.dei.proj3.dto;
 
 import jakarta.xml.bind.annotation.XmlElement;
+import pt.uc.dei.proj3.entity.UserEntity;
 
 import java.time.LocalDate;
 
 public class LeadDto {
 
-    private int id;
+    private Long id; // Changed from int to Long to match Entity
     private String titulo;
     private String descricao;
     private int estado;
     private LocalDate dataCriacao;
+    private UserEntity user;
 
     public LeadDto() {
     }
 
-    public LeadDto(String titulo, String descricao, int estado) {
+    public LeadDto(Long id, String titulo, String descricao, int estado, LocalDate dataCriacao, UserEntity user) {
+        this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.estado = estado;
+        this.dataCriacao = dataCriacao;
+        this.user = user;
     }
 
     @XmlElement
-    public int getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) { // Added setter
+        this.id = id;
     }
 
 
@@ -59,4 +68,7 @@ public class LeadDto {
         return dataCriacao;
     }
 
+    public UserEntity getUser() {
+        return user;
+    }
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.NoResultException;
 import pt.uc.dei.proj3.entity.TokenEntity;
 import pt.uc.dei.proj3.entity.UserEntity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -14,21 +15,13 @@ import java.util.Base64;
 @Stateless
 public class TokenDao extends DefaultDao<TokenEntity> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public TokenDao() {
         super(TokenEntity.class);
     }
 
-
-//    public boolean validateToken(String token, Long userID) {
-//        Long resultado = em.createQuery("SELECT COUNT(t) FROM TokenEntity t WHERE t.token = :token AND t.user.id = :userID", Long.class)
-//                .setParameter("token", token)
-//                .setParameter("userID", userID)
-//                .getSingleResult();
-//        // verificar data expirar
-//        return resultado > 0;
-//    }
 
     public String encriptar(String token) {
         try {

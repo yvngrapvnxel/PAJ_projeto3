@@ -34,20 +34,10 @@ public class UserBean implements Serializable {
         return tokenLimpo; // Retorna a versão não encriptada para o Frontend/Postman
     }
 
-    public boolean validarToken(String username, String token) {
-        if (username == null || token == null || username.trim().isEmpty() || token.trim().isEmpty()) {
-            return false;
-        }
-
-        UserEntity u = tokenDao.getUserByToken(token);
-
-        return (u != null && u.getUsername().equals(username));
-    }
 
     public boolean register(UserDto newUser) {
         // Verifica se já existe alguém com este username na Base de Dados
         if (userDao.checkUsername(newUser.getUsername()) != null) {
-            System.out.println("metodo userbean boolean falso");
             return false;
         }
 

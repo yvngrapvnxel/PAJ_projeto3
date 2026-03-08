@@ -3,6 +3,7 @@ package pt.uc.dei.proj3.dao;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.entity.LeadEntity;
 import pt.uc.dei.proj3.entity.UserEntity;
 import java.io.Serializable;
 import java.util.List;
@@ -50,6 +51,13 @@ public class UserDao extends DefaultDao<UserEntity> implements Serializable {
     // 3. Lista todos os utilizadores ATIVOS (para o Administrador)
     public List<UserEntity> findAllActiveUsers() {
         return em.createQuery("SELECT u FROM UserEntity u WHERE u.isAtivo = true", UserEntity.class)
+                .getResultList();
+    }
+
+
+    public List<LeadEntity> getAllLeads(UserEntity user) {
+        return em.createQuery("SELECT l FROM LeadEntity l WHERE users = :user", LeadEntity.class)
+                .setParameter("user", user)
                 .getResultList();
     }
 
