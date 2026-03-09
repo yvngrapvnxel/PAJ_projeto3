@@ -1,8 +1,8 @@
 package pt.uc.dei.proj3.entity;
 
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,8 +10,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="lead")
-// named queries
 public class LeadEntity implements Serializable {
+
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -48,10 +48,6 @@ public class LeadEntity implements Serializable {
     @JoinColumn(name = "userId", nullable = false) // FK
     private UserEntity users;
 
-
-
-
-    // --- MÉTODOS
 
 
     public Long getId() {

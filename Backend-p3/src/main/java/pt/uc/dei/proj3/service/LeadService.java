@@ -1,49 +1,46 @@
 package pt.uc.dei.proj3.service;
 
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.LeadBean;
 import pt.uc.dei.proj3.beans.UserBean;
-import pt.uc.dei.proj3.dao.LeadDao;
-import pt.uc.dei.proj3.dao.TokenDao;
 import pt.uc.dei.proj3.dto.LeadDto;
-import pt.uc.dei.proj3.dto.UserDto;
 import pt.uc.dei.proj3.entity.UserEntity;
 
 //test
 import java.util.List;
 
+
 @Path("/leads")
 public class LeadService {
+
 
     @Inject
     private LeadBean leadBean;
     @Inject
     private UserBean userBean;
-    @Inject
-    private TokenDao tokenDao;
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addLead(@HeaderParam("token") String token, LeadDto leadDto) {
 
-
-        UserEntity user = tokenDao.getUserByToken(token);
+        UserEntity user = userBean.getUser(token);
 
         if (token == null || user == null) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }
 
-        if (leadDto == null ||
-                leadDto.getTitulo() == null || leadDto.getTitulo().trim().isEmpty() ||
-                leadDto.getDescricao() == null || leadDto.getDescricao().trim().isEmpty()) {
+        if (leadDto == null) {
             return Response.status(400).entity("Dados incompletos: Título e Descrição são obrigatórios").build();
         }
 
         try {
+            leadDto.setUser(user);
             leadBean.createLead(leadDto);
             return Response.status(201).entity("Lead adicionada com sucesso!").build();
         } catch (Exception e) {
@@ -51,11 +48,12 @@ public class LeadService {
         }
     }
 
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLeads(@HeaderParam("token") String token) {
 
-        UserEntity user = tokenDao.getUserByToken(token);
+        UserEntity user = userBean.getUser(token);
 
         if (token == null || user == null) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
@@ -65,6 +63,7 @@ public class LeadService {
         return Response.status(200).entity(leads).build();
     }
 
+
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -73,7 +72,7 @@ public class LeadService {
                                LeadDto dto) {
 
 
-        UserEntity user = tokenDao.getUserByToken(token);
+        UserEntity user = userBean.getUser(token);
 
         if (user == null || token == null) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
@@ -94,13 +93,13 @@ public class LeadService {
         return Response.status(200).entity("Lead atualizada com sucesso").build();
     }
 
-    @DELETE
+
+    @POST
     @Path("/{id}")
-    public Response eliminarLead(@PathParam("id") int id,
+    public Response softDeleteLead(@PathParam("id") int id,
                                  @HeaderParam("token") String token) {
 
-
-        UserEntity user = tokenDao.getUserByToken(token); // TODO enviar token para tokenBean e lá encriptar e enviar para tokenDao
+        UserEntity user = userBean.getUser(token);
 
         if (user == null || token == null) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
@@ -114,4 +113,5 @@ public class LeadService {
             return Response.status(404).entity("Lead não encontrada com o ID: " + id).build();
         }
     }
+
 }

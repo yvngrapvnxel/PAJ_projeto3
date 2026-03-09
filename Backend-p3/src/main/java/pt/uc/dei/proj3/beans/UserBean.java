@@ -49,10 +49,8 @@ public class UserBean implements Serializable {
         tokenDao.setExpired(token);
     }
 
-    public UserDto getUser(String username) {
-        UserEntity entity = userDao.getUserByUsername(username);
-        if (entity == null) return null;
-        return converterParaDto(entity);
+    public UserEntity getUser(String token) {
+        return tokenDao.getUserByToken(token);
     }
 
     public boolean updateUser(String token, UserDto novosDados) {

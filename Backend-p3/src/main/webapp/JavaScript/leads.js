@@ -1,4 +1,4 @@
-/*const LEADS_API_URL = "http://localhost:8080/backend-p2-1.0-SNAPSHOT/rest/leads";*/
+const LEADS_API_URL = "http://localhost:8080/projeto3/rest/leads";
 let leadsList = [];
 
 // Estados (frontend) – index = STATE_ID (como no teu backend atual)
@@ -9,14 +9,13 @@ const statusOptions = ["Novo", "Em análise", "Proposta", "Ganho", "Perdido"];
 // ==========================================
 
 async function carregarLeads() {
-  const username = sessionStorage.getItem("username");
-  const password = sessionStorage.getItem("password");
-  if (!username) return;
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
   try {
     const response = await fetch(LEADS_API_URL, {
       method: "GET",
-      headers: { username, password },
+      headers: { 'token': token },
     });
 
     if (response.ok) {
@@ -32,10 +31,10 @@ async function carregarLeads() {
 
       listarLeads();
     } else {
-      alert("Erro ao ir buscar leads: " + (await response.text()));
+      alert("Erro: " + (await response.text()));
     }
   } catch (error) {
-    console.error("Erro na ligação ao servidor:", error);
+    console.error("Erro:", error);
   }
 }
 
@@ -43,7 +42,7 @@ function listarLeads() {
   const main = document.getElementById("content");
   if (!main) return;
 
-  let html = `
+  main.innerHTML = `
     <div class="barra-leads">
       <h2>Leads</h2>
       <button class="btn" type="button" onclick="formNovaLead()">
@@ -57,8 +56,6 @@ function listarLeads() {
     <div id="listaLeads" style="margin-top: 5%;"></div>
     <br>
   `;
-
-  main.innerHTML = html;
 
   preencherFiltroEstados();
   renderListaLeads(leadsList);
@@ -241,17 +238,17 @@ function editarLead(id) {
 // ==========================================
 
 async function guardarLead(id = null) {
-  const username = sessionStorage.getItem("username");
-  const password = sessionStorage.getItem("password");
-  if (!username) return;
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
   const titulo = (id === null ? document.getElementById("leadTitulo") : document.getElementById("editTitulo")).value.trim();
   const descricao = (id === null ? document.getElementById("leadDescricao") : document.getElementById("editDescricao")).value.trim();
   const estado = Number((id === null ? document.getElementById("leadEstado") : document.getElementById("editEstado")).value);
 
   if (titulo === "" || descricao === "") return;
+  const isAtivo = true;
 
-  const dados = { titulo, descricao, estado };
+  const dados = { isAtivo, titulo, descricao, estado };
 
   try {
     let response;
@@ -261,7 +258,8 @@ async function guardarLead(id = null) {
       response = await fetch(LEADS_API_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "token": token
         },
         body: JSON.stringify(dados),
       });
@@ -270,7 +268,8 @@ async function guardarLead(id = null) {
       response = await fetch(`${LEADS_API_URL}/${id}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "token": token
         },
         body: JSON.stringify(dados),
       });
@@ -280,24 +279,26 @@ async function guardarLead(id = null) {
       alert(id === null ? "Lead adicionada com sucesso!" : "Lead atualizada com sucesso!");
       await carregarLeads();
     } else {
-      alert("Erro do Java: " + (await response.text()));
+      alert("Erro: " + (await response.text()));
     }
   } catch (error) {
     console.error("Falha ao guardar:", error);
   }
 }
 
+
+
+// TODO passar para admin.js
 async function removerLead(id) {
   if (!confirm("Tem a certeza que deseja remover esta lead?")) return;
 
-  const username = sessionStorage.getItem("username");
-  const password = sessionStorage.getItem("password");
-  if (!username) return;
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
   try {
     const response = await fetch(`${LEADS_API_URL}/${id}`, {
-      method: "DELETE",
-      headers: { username, password },
+      method: "POST",
+      headers: { "token": token },
     });
 
     if (response.ok) {
@@ -307,7 +308,7 @@ async function removerLead(id) {
       alert("Erro ao remover: " + (await response.text()));
     }
   } catch (error) {
-    console.error("Erro na ligação:", error);
+    console.error("Erro:", error);
   }
 }
 

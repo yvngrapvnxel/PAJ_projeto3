@@ -1,13 +1,14 @@
 package pt.uc.dei.proj3.dto;
 
+
 import jakarta.xml.bind.annotation.XmlElement;
 import pt.uc.dei.proj3.entity.UserEntity;
-
 import java.time.LocalDate;
+
 
 public class LeadDto {
 
-    private Long id; // Changed from int to Long to match Entity
+    private Long id;
     private String titulo;
     private String descricao;
     private int estado;
@@ -68,7 +69,13 @@ public class LeadDto {
         return dataCriacao;
     }
 
+    @XmlElement
     public UserEntity getUser() {
         return user;
     }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
 }
