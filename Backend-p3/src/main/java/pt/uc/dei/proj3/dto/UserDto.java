@@ -13,6 +13,7 @@ public class UserDto {
     private String email;
     private String fotoUrl;
     private String telefone;
+    private boolean admin;
     
     @XmlElement
     public String getUsername() {
@@ -76,5 +77,13 @@ public class UserDto {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @XmlElement
+    public boolean isAdmin() {
+        return admin;
+    }
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

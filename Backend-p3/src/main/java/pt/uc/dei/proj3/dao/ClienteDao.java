@@ -27,6 +27,8 @@ public class ClienteDao extends DefaultDao<ClienteEntity> implements Serializabl
         finalClient.setEmpresa(newClient.getEmpresa());
         finalClient.setUser(u);
 
+        finalClient.setAtivo(true);
+
         persist(finalClient);
     }
 
@@ -49,14 +51,21 @@ public class ClienteDao extends DefaultDao<ClienteEntity> implements Serializabl
 
     // Lista apenas os clientes de um determinado utilizador
     public List<ClienteEntity> findAllActiveByUser(UserEntity user) {
-        return em.createQuery("SELECT c FROM ClienteEntity c WHERE c.user = :user AND c.isAtivo = true", ClienteEntity.class)
+        return em.createQuery("SELECT c FROM ClienteEntity c WHERE c.users = :user AND c.isAtivo = true", ClienteEntity.class)
                 .setParameter("user", user)
                 .getResultList();
     }
 
     // Lista os clientes APAGADOS de um utilizador (útil para a funcionalidade de restaurar )
     public List<ClienteEntity> findAllDeletedByUser(UserEntity user) {
-        return em.createQuery("SELECT c FROM ClienteEntity c WHERE c.user = :user AND c.isAtivo = false", ClienteEntity.class)
+        return em.createQuery("SELECT c FROM ClienteEntity c WHERE c.users = :user AND c.isAtivo = false", ClienteEntity.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
+    // Lista TODOS os clientes de um utilizador (Ativos e Inativos) - Exclusivo para Admin
+    public List<ClienteEntity> findAllByUserForAdmin(UserEntity user) {
+        return em.createQuery("SELECT c FROM ClienteEntity c WHERE c.users = :user", ClienteEntity.class)
                 .setParameter("user", user)
                 .getResultList();
     }
