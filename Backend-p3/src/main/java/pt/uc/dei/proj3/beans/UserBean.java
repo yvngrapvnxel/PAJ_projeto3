@@ -68,7 +68,7 @@ public class UserBean implements Serializable {
     }
 
     // Função auxiliar para mapear de Entity (BD) para DTO (Frontend)
-    private UserDto converterParaDto(UserEntity e) {
+    public UserDto converterParaDto(UserEntity e) {
         UserDto dto = new UserDto();
         dto.setId(e.getId());
         dto.setPrimeiroNome(e.getPrimeiroNome());
@@ -77,6 +77,7 @@ public class UserBean implements Serializable {
         dto.setTelefone(e.getTelefone());
         dto.setUsername(e.getUsername());
         dto.setFotoUrl(e.getFotoUrl());
+        dto.setAdmin(e.isAdmin());
         return dto;
     }
 }

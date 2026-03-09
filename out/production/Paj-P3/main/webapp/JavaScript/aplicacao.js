@@ -1,5 +1,8 @@
 // aplicacao.js - ficheiro principal da aplicação
 
+// para apagar mais tarde
+console.log("Aplicação iniciada.")
+
 const content = document.getElementById("content");
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -34,10 +37,6 @@ function loadHeader() {
     } else {
 
         const firstName = localStorage.getItem("userFirstName") || "Utilizador";
-        const isAdmin = localStorage.getItem("isAdmin") === "true";
-
-        const adminBtn = isAdmin ? `<button class="btn" onclick="loadAdmin()"><i class="fa-solid fa-crown"></i> Administração</button>` : '';
-
         headerDiv.innerHTML = `
         
             <header class="header-app">
@@ -48,7 +47,7 @@ function loadHeader() {
                     </div>
                 
                     <div class="header-right">
-                        ${adminBtn} <button class="btn" onclick="verPerfil()"><i class="fa-solid fa-circle-user"></i>Meu Perfil</button>
+                        <button class="btn" onclick="verPerfil()"><i class="fa-solid fa-circle-user"></i>Meu Perfil</button>
                         <button class="btn" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Logout</button>
                     </div>
                 </div>
@@ -60,6 +59,22 @@ function loadHeader() {
         `;
     }
 }
+
+/*function loadAside() {
+    const asideDiv = document.getElementById("aside");
+
+    asideDiv.innerHTML = `
+        <aside id="sidebar">
+            <button onclick="loadLeads()">Leads</button>
+            <br>
+            <button onclick="loadClientes()">Clientes</button>
+            <br>
+            <button onclick="loadProjetos()">Projetos</button>
+            <br>
+            <button onclick="loadTarefas()">Tarefas</button>
+        </aside>
+    `
+}*/
 
 function loadFooter() {
     const footerDiv = document.getElementById("footer");
@@ -133,7 +148,6 @@ async function login(event) {
                 const userData = await resProfile.json();
 
                 localStorage.setItem('userFirstName', userData.primeiroNome);
-                localStorage.setItem('isAdmin', userData.admin);
                 window.location.href = "index.html";
             }
         } else {
@@ -305,26 +319,6 @@ async function guardarPerfil() {
     }
 }
 
-// ==========================================
-// VISTA DE ADMINISTRAÇÃO
-// ==========================================
-
-// ==========================================
-// VISTA DE ADMINISTRAÇÃO (COM ESTILO)
-// ==========================================
-
-function loadAdmin() {
-    if (localStorage.getItem("isAdmin") !== "true") {
-        content.innerHTML = `<h2 style="color:#000000; text-align:center; margin-top: 50px;">Acesso Negado</h2>`;
-        return;
-    }
-
-    if (window.location.hash !== "#admin") {
-        window.location.hash = "#admin";
-    }
-
-    carregarPaginaAdmin();
-}
 
 // as funções seguintes serão terminadas em projetos futuros
 function loadProjetos() {
@@ -371,9 +365,7 @@ function roteador() {
         verPerfil();
     } else if (hash === "#leads") {
         loadLeads();
-    } else if (hash === "#admin") {
-        loadAdmin();
-    }else if (hash === "#projetos") {
+    } else if (hash === "#projetos") {
         loadProjetos();
     } else if (hash === "#tarefas") {
         loadTarefas();

@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/projeto3/rest/me/clients";
+const API_URL = "http://localhost:8080/projeto3/rest/clientes";
 let clienteList = [];
 
 // ==========================================
@@ -11,7 +11,7 @@ async function carregarClientes() {
     if (!token) {
         alert("Sessão expirada ou utilizador não autenticado.");
         return 
-    }
+    };
 
     try {
         const response = await fetch(API_URL, {
