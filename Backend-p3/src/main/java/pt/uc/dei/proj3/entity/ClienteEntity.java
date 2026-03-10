@@ -1,6 +1,8 @@
 package pt.uc.dei.proj3.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -36,7 +38,8 @@ public class ClienteEntity implements Serializable {
     private boolean isAtivo;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false) // FK
+    @JoinColumn(name = "userId") // FK
+    @OnDelete(action = OnDeleteAction.SET_NULL)//põe campo como null quando o user é apagado
     private UserEntity users;
 
 

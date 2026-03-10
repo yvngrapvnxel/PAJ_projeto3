@@ -220,7 +220,8 @@ async function verPerfil() {
                     <h2 style="text-align: center;">Meu Perfil</h2>
                     
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <img id="imgPerfilVisivel" src="${user.fotoUrl || '/imagens/favicon1.png'}" alt="Foto" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">                    </div>
+                        <img id="imgPerfilVisivel" src="${user.fotoUrl || '/imagens/favicon1.png'}" alt="Foto" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">                    
+                    </div>
                     
                     <label>Username</label>
                     <input type="text" value="${user.username}" disabled title="O username não pode ser alterado"><br><br>

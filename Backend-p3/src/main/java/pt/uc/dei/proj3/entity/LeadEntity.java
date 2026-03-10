@@ -3,6 +3,9 @@ package pt.uc.dei.proj3.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -45,7 +48,8 @@ public class LeadEntity implements Serializable {
 
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false) // FK
+    @JoinColumn(name = "userId") // FK
+    @OnDelete(action = OnDeleteAction.SET_NULL)//põe campo como null quando o user é apagado
     private UserEntity users;
 
 

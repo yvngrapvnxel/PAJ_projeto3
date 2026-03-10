@@ -3,7 +3,7 @@
 // ==========================================
 let clientesAlvoAdmin = []; // <-- ADICIONA ESTA LINHA AQUI
 
-const getAdminToken = () => localStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 // 1. Ponto de entrada: Carrega a estrutura base e chama a lista
 function carregarPaginaAdmin() {
@@ -37,7 +37,7 @@ async function carregarListaUtilizadores() {
 
     try {
         const response = await fetch("http://localhost:8080/projeto3/rest/admin/users", {
-            method: "GET", headers: { "token": getAdminToken() }
+            method: "GET", headers: { "token": token }
         });
 
         if (response.ok) {
@@ -80,8 +80,8 @@ async function abrirDetalhesUtilizador(username) {
     conteudo.innerHTML = `<p><i class="fa-solid fa-spinner fa-spin"></i> A carregar dados de ${username}...</p>`;
 
     try {
-        const resUser = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}`, { method: 'GET', headers: { "token": getAdminToken() } });
-        const resClients = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/clients`, { method: 'GET', headers: { "token": getAdminToken() } });
+        const resUser = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}`, { method: 'GET', headers: { "token": token } });
+        const resClients = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/clients`, { method: 'GET', headers: { "token": token } });
 
         if (resUser.ok && resClients.ok) {
             const user = await resUser.json();
@@ -90,9 +90,7 @@ async function abrirDetalhesUtilizador(username) {
             // Guardamos os clientes na memória para a edição funcionar
             clientesAlvoAdmin = clientes;
 
-            let html = `
-                <button class="btn" style="margin-bottom: 20px;" onclick="carregarListaUtilizadores()"><i class="fa-solid fa-arrow-left"></i> Voltar à Lista</button>
-                
+            let html = `                
                 <div class="user-card">
                     <div style="display: flex; gap: 20px; align-items: center;">
                         <img src="${user.fotoUrl || './imagens/favicon1.png'}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
@@ -112,7 +110,11 @@ async function abrirDetalhesUtilizador(username) {
                     <div class="info-card clientes">
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">
                             <h3 style="margin: 0;"><i class="fa-solid fa-briefcase"></i> Clientes (${clientes.length})</h3>
-                            <button class="btn" style="background-color: #f0ad4e; color: white; font-size: 12px; padding: 5px 10px; border: none;" onclick="apagarTodosClientesAdmin('${user.username}', false)">Inativar Todos</button>
+                            
+                            <div style="display: flex; gap: 5px;">
+                                <button class="btn" style="background-color: #f0ad4e; color: white; font-size: 12px; padding: 5px 10px; border: none;" onclick="apagarTodosClientesAdmin('${user.username}', false)" title="Inativar Todos"><i class="fa-solid fa-ban"></i> Inativar Todos</button>
+                                <button class="btn" style="background-color: #d9534f; color: white; font-size: 12px; padding: 5px 10px; border: none;" onclick="apagarTodosClientesAdmin('${user.username}', true)" title="Excluir Definitivamente Todos"><i class="fa-solid fa-fire"></i> Excluir Todos</button>
+                            </div>
                         </div>
             `;
 
@@ -169,11 +171,15 @@ async function apagarUtilizadorAdmin(username, permanente) {
 
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": getAdminToken() }});
-        alert(await response.text());
+        const response = await fetch(url, { method: 'DELETE',
+                                                          headers: { "token": token }});
+
+        const alerta = await response.text();
+
+        alert(alerta);
 
         if (permanente) {
-            carregarListaUtilizadoresAdmin(); // Se apagou de vez, volta para a lista
+            await carregarListaUtilizadores(); // Se apagou de vez, volta para a lista
         }
     } catch (error) {
         alert("Falha na comunicação.");
@@ -182,10 +188,14 @@ async function apagarUtilizadorAdmin(username, permanente) {
 
 //se permanente == true, faz hardDelet, senão é softDelet
 async function apagarTodosClientesAdmin(username, permanente) {
-    if (!confirm(`Apagar TODOS os clientes de @${username}?`)) return;
+    // Muda a palavra dependendo do que o Admin escolheu
+    const acao = permanente ? 'EXCLUIR DEFINITIVAMENTE' : 'inativar';
+
+    if (!confirm(`Tens a certeza que queres ${acao} TODOS os clientes de @${username}?`)) return;
+
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}/clients` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": getAdminToken() }});
+        const response = await fetch(url, { method: 'DELETE', headers: { "token": token }});
         alert(await response.text());
         abrirDetalhesUtilizador(username); // Recarrega os detalhes para atualizar a lista
     } catch (error) {
@@ -197,7 +207,7 @@ async function apagarClienteAdminBtn(idCliente, permanente, usernameToRefresh) {
     if (!confirm(`Excluir definitivamente este Cliente?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/clients/${idCliente}` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": getAdminToken() }});
+        const response = await fetch(url, { method: 'DELETE', headers: { "token": token }});
         alert(await response.text());
         abrirDetalhesUtilizador(usernameToRefresh); // Recarrega a página para o cliente desaparecer visualmente
     } catch (error) {
@@ -215,7 +225,7 @@ function mostrarFormEdicaoClienteAdmin(index, username) {
 
     // Substitui a vista atual pelo formulário de edição
     conteudo.innerHTML = `
-        <button class="btn" style="margin-bottom: 20px;" onclick="abrirDetalhesUtilizador('${username}')"><i class="fa-solid fa-arrow-left"></i> Cancelar e Voltar</button>
+        <button class="btn" style="margin-bottom: 20px;" onclick="abrirDetalhesUtilizador('${username}')"><i class="fa-solid fa-arrow-left"></i> Voltar ao perfil do utilizador</button>
 
         <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 500px; margin: 0 auto; border-top: 4px solid #f0ad4e;">
             <h3 style="margin-top:0;"><i class="fa-solid fa-pen"></i> Editar Cliente</h3>
@@ -259,7 +269,7 @@ async function guardarEdicaoClienteAdmin(idCliente, username) {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
-                "token": getAdminToken()
+                "token": token
             },
             body: JSON.stringify(dados)
         });

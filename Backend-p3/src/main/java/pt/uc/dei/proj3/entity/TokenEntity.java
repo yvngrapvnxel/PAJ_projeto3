@@ -2,6 +2,8 @@ package pt.uc.dei.proj3.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,6 +21,7 @@ public class TokenEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false, updatable = false) // FK
+    @OnDelete(action = OnDeleteAction.CASCADE)// apaga o token quando o user é apagado
     private UserEntity users;
 
     @Id
