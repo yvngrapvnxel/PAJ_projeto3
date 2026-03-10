@@ -11,7 +11,7 @@ import pt.uc.dei.proj3.dto.UserDto;
 
 import java.util.List;
 
-@Path("/me/clients")
+@Path("/clients")
 public class ClientService {
 
     @Inject
@@ -105,7 +105,7 @@ public class ClientService {
         }
     }
 
-    @DELETE
+    @POST
     @Path("/remove")
     public Response removeClient(@HeaderParam("token") String token, ClientDto dto) {
 

@@ -29,7 +29,7 @@ public class LeadBean implements Serializable {
 
     public LeadDto converterParaDto(LeadEntity lead) {
         if (lead == null) return null;
-        return new LeadDto(
+        LeadDto dto = new LeadDto(
                 lead.getId(),
                 lead.getTitulo(),
                 lead.getDescricao(),
@@ -37,6 +37,9 @@ public class LeadBean implements Serializable {
                 lead.getDataCriacao(),
                 userBean.converterParaDto(lead.getUser())
         );
+        dto.setAtivo(lead.isAtivo());
+
+        return dto;
     }
 
     public LeadEntity converterParaEntity(LeadDto dto) {

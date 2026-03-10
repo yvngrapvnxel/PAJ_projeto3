@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/projeto3/rest/me/clients";
+const API_URL = "http://localhost:8080/projeto3/rest/clients";
 let clienteList = [];
 
 // ==========================================
@@ -200,7 +200,7 @@ async function removerCliente(index) {
 
     try {
         const response = await fetch(`${API_URL}/remove`, {
-            method: "DELETE",
+            method: "POST",
             headers: { "Content-Type": "application/json", "token": token},
             body: JSON.stringify( dados ) // O backend espera um JSON com o ID para remover
         });

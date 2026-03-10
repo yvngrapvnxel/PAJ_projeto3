@@ -13,6 +13,8 @@ public class LeadDto {
     private int estado;
     private LocalDate dataCriacao;
     private UserDto user;
+    private boolean ativo;
+
 
     public LeadDto() {
     }
@@ -75,6 +77,14 @@ public class LeadDto {
 
     public void setUser(UserDto user) {
         this.user = user;
+    }
+
+    @XmlElement
+    public boolean isAtivo() {
+        return ativo;
+    }
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
 }

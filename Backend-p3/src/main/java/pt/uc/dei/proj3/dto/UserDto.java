@@ -14,7 +14,8 @@ public class UserDto {
     private String fotoUrl;
     private String telefone;
     private boolean admin;
-    
+    private boolean ativo;
+
     @XmlElement
     public String getUsername() {
         return username;
@@ -85,5 +86,13 @@ public class UserDto {
     }
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    @XmlElement
+    public boolean isAtivo() {
+        return ativo;
+    }
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
