@@ -21,15 +21,17 @@ async function carregarLeads() {
     if (response.ok) {
       leadsList = await response.json();
 
-      // ordenar: por estado e depois por título (podes ajustar)
-      leadsList.sort((a, b) => {
-        const ea = Number(a.estado ?? 0);
-        const eb = Number(b.estado ?? 0);
-        if (ea !== eb) return ea - eb;
-        return (a.titulo || "").localeCompare(b.titulo || "");
-      });
-
+      if (leadsList.length) {
+        // ordenar: por estado e depois por título (podes ajustar)
+        leadsList.sort((a, b) => {
+          const ea = Number(a.estado ?? 0);
+          const eb = Number(b.estado ?? 0);
+          if (ea !== eb) return ea - eb;
+          return (a.titulo || "").localeCompare(b.titulo || "");
+        });
+      }
       listarLeads();
+
     } else {
       alert("Erro: " + (await response.text()));
     }

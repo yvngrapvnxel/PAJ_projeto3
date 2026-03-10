@@ -11,6 +11,7 @@ import pt.uc.dei.proj3.dto.LeadDto;
 import pt.uc.dei.proj3.entity.UserEntity;
 
 //test
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,7 +41,7 @@ public class LeadService {
         }
 
         try {
-            leadDto.setUser(user);
+            leadDto.setUser(userBean.converterParaDto(user));
             leadBean.createLead(leadDto);
             return Response.status(201).entity("Lead adicionada com sucesso!").build();
         } catch (Exception e) {
@@ -60,6 +61,9 @@ public class LeadService {
         }
 
         List<LeadDto> leads = leadBean.getAllLeads(user);
+        if (leads == null) {
+            leads = new ArrayList<>();
+        }
         return Response.status(200).entity(leads).build();
     }
 
@@ -67,7 +71,7 @@ public class LeadService {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editarLead(@PathParam("id") int id,
+    public Response editarLead(@PathParam("id") Long id,
                                @HeaderParam("token") String token,
                                LeadDto dto) {
 
@@ -84,7 +88,7 @@ public class LeadService {
             return Response.status(400).entity("Erro: Título e Descrição são obrigatórios para a edição").build();
         }
 
-        boolean updated = leadBean.updateLead(user, id, dto);
+        boolean updated = leadBean.updateLead(id, dto);
 
         if (!updated) {
             return Response.status(404).entity("Lead não encontrada com o ID: " + id).build();
@@ -96,7 +100,7 @@ public class LeadService {
 
     @POST
     @Path("/{id}")
-    public Response softDeleteLead(@PathParam("id") int id,
+    public Response softDeleteLead(@PathParam("id") Long id,
                                  @HeaderParam("token") String token) {
 
         UserEntity user = userBean.getUser(token);
