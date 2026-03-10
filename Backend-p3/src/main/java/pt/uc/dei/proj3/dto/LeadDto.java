@@ -2,7 +2,6 @@ package pt.uc.dei.proj3.dto;
 
 
 import jakarta.xml.bind.annotation.XmlElement;
-import pt.uc.dei.proj3.entity.UserEntity;
 import java.time.LocalDate;
 
 
@@ -13,12 +12,12 @@ public class LeadDto {
     private String descricao;
     private int estado;
     private LocalDate dataCriacao;
-    private UserEntity user;
+    private UserDto user;
 
     public LeadDto() {
     }
 
-    public LeadDto(Long id, String titulo, String descricao, int estado, LocalDate dataCriacao, UserEntity user) {
+    public LeadDto(Long id, String titulo, String descricao, int estado, LocalDate dataCriacao, UserDto user) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
@@ -70,11 +69,11 @@ public class LeadDto {
     }
 
     @XmlElement
-    public UserEntity getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(UserEntity user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 

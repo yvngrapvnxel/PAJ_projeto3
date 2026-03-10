@@ -13,6 +13,20 @@ target/
 *.iml
 *.ipr
 
+# IntelliJ IDEA specific output
+out/
+
+# Log files
+*.log
+
+# Mobile/Android (if applicable)
+.gradle/
+captures/
+
+# Package managers
+.mvn/
+.wrapper/
+
 ### Eclipse ###
 .apt_generated
 .classpath
