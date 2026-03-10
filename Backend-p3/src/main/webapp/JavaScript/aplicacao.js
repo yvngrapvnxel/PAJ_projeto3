@@ -166,15 +166,25 @@ async function logout() {
 async function registar(event) {
     event.preventDefault();
 
-    const novoUtilizador = {
-        primeiroNome: document.getElementById("regPrimeiroNome").value,
-        ultimoNome: document.getElementById("regUltimoNome").value,
-        email: document.getElementById("regEmail").value,
-        username: document.getElementById("regUsername").value,
-        password: document.getElementById("regPassword").value,
-        fotoUrl: document.getElementById("regFotoUrl").value,
-        telefone: document.getElementById("regTelefone").value
-    };
+    const primeiroNome = document.getElementById("regPrimeiroNome").value.trim();
+    const ultimoNome = document.getElementById("regUltimoNome").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const username = document.getElementById("regUsername").value.trim();
+    const password = document.getElementById("regPassword").value.trim();
+    const fotoUrl = document.getElementById("regFotoUrl").value.trim();
+    const telefone = document.getElementById("regTelefone").value.trim();
+
+    if (!primeiroNome || !ultimoNome || !email || !username || !password || !fotoUrl || !telefone){
+        alert("Por favor, preenche todos os campos obrigatórios.");
+        return;
+    }
+
+    if (!/^[29][0-9]{8}$/.test(telefone)) {
+        alert("O telefone deve ter 9 dígitos e começar por 2 ou 9.");
+        return;
+    }
+
+    const novoUtilizador = { primeiroNome, ultimoNome, email, username, password, fotoUrl, telefone };
 
     try {
         const resposta = await fetch("http://localhost:8080/projeto3/rest/users/register", {
@@ -187,7 +197,7 @@ async function registar(event) {
             alert("Utilizador registado com sucesso!");
             window.location.href = "login.html";
         } else {
-            alert("Erro no registo. Verifique se o username já existe.");
+            alert(await resposta.text());
         }
     } catch (erro) {
         console.error("Erro na ligação:", erro);
@@ -262,10 +272,16 @@ async function verPerfil() {
 
 async function guardarPerfil() {
     const passAtual = document.getElementById("perfilPassAtual").value;
+    const telefoneInput = document.getElementById("perfilTelefone").value.trim();
     const token = localStorage.getItem("token");
 
     if (!passAtual) {
         alert("Por favor, insere a tua Password Atual para confirmar as alterações.");
+        return;
+    }
+
+    if (telefoneInput && !/^[29][0-9]{8}$/.test(telefoneInput)) {
+        alert("O telefone deve ter 9 dígitos e começar por 2 ou 9.");
         return;
     }
 
