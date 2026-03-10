@@ -5,12 +5,15 @@ import jakarta.inject.Inject;
 import pt.uc.dei.proj3.dao.AdminDao;
 
 import pt.uc.dei.proj3.dao.ClienteDao;
+import pt.uc.dei.proj3.dao.LeadDao;
 import pt.uc.dei.proj3.dto.ClientDto;
+import pt.uc.dei.proj3.dto.LeadDto;
 import pt.uc.dei.proj3.entity.ClienteEntity;
 
 import pt.uc.dei.proj3.dao.TokenDao;
 
 import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.entity.LeadEntity;
 import pt.uc.dei.proj3.entity.UserEntity;
 
 import java.io.Serializable;
@@ -35,6 +38,12 @@ public class AdminBean implements Serializable {
 
     @Inject
     ClientBean clientBean;
+
+    @Inject
+    LeadDao leadDao;
+
+    @Inject
+    LeadBean leadBean;
 
     public UserEntity checkAdmin(String token) throws Exception {
 
@@ -167,6 +176,66 @@ public class AdminBean implements Serializable {
             } else {
                 clienteDao.deletClient(c);
             }
+        }
+    }
+    // ==========================================
+    // MÉTODOS DE LEADS (ADMIN)
+    // ==========================================
+
+    public List<LeadDto> getLeadsFromUser(String tokenAdmin, String usernameAlvo) throws Exception {
+        checkAdmin(tokenAdmin);
+
+        UserEntity alvo = adminDao.checkUsername(usernameAlvo);
+        if (alvo == null) throw new Exception("404: Utilizador não encontrado");
+
+        // Assumindo que o LeadDao tem o metodo findAllByUserForAdmin (como fizemos nos clientes)
+        List<LeadEntity> leads = leadDao.findAllByUserForAdmin(alvo);
+        List<LeadDto> dtos = new ArrayList<>();
+        for (LeadEntity l : leads) {
+            dtos.add(leadBean.converterParaDto(l));
+        }
+        return dtos;
+    }
+
+    // Editar uma Lead como Administrador
+    public void editarLeadAdmin(String tokenAdmin, Long idLead, LeadDto dtoNovo) throws Exception {
+        checkAdmin(tokenAdmin);
+
+        LeadEntity leadAtual = leadDao.findLeadById(idLead);
+        if (leadAtual == null) throw new Exception("404: Lead não encontrada.");
+
+        // Atualiza a lead usando o método que já tens no LeadDao
+        leadDao.updateLead(idLead.intValue(), dtoNovo);
+    }
+
+    public void apagarTodasLeadsDeUser(String tokenAdmin, String usernameAlvo, boolean permanente) throws Exception {
+        checkAdmin(tokenAdmin);
+
+        UserEntity alvo = adminDao.checkUsername(usernameAlvo);
+        if (alvo == null) throw new Exception("404: Utilizador alvo não encontrado.");
+
+        List<LeadEntity> leads = leadDao.findAllByUserForAdmin(alvo);
+        for (LeadEntity l : leads) {
+            if (permanente) {
+                leadDao.remove(l);
+            } else {
+                l.setIsAtivo(false); // Inativa a lead
+                leadDao.merge(l);
+            }
+        }
+    }
+
+    public void apagarLeadAdmin(String tokenAdmin, Long idLead, boolean permanente) throws Exception {
+        checkAdmin(tokenAdmin);
+
+        LeadEntity lead = leadDao.findLeadById(idLead);
+        if (lead == null) throw new Exception("404: Lead não encontrada.");
+
+        if (permanente) {
+            leadDao.remove(lead);
+        } else {
+            lead.setIsAtivo(false);
+            leadDao.merge(lead);
         }
     }
 }

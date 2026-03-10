@@ -5,6 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.AdminBean;
+import pt.uc.dei.proj3.dto.LeadDto;
 import pt.uc.dei.proj3.dto.UserDto;
 
 @Path("/admin")
@@ -119,6 +120,72 @@ public class AdminService {
         try {
             adminBean.apagarClienteAdmin(token, idCliente, permanente);
             String msg = permanente ? "Cliente excluído permanentemente." : "Cliente inativado com sucesso.";
+            return Response.status(200).entity(msg).build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
+    // ========================================================
+    // ROTAS DE GESTÃO DE LEADS (ADMIN)
+    // ========================================================
+
+    @GET
+    @Path("/users/{username}/leads")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getLeadsDeUser(@HeaderParam("token") String token,
+                                   @PathParam("username") String usernameAlvo) {
+        try {
+            return Response.status(200).entity(adminBean.getLeadsFromUser(token, usernameAlvo)).build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
+    // Editar uma lead específica (Admin)
+    @PUT
+    @Path("/leads/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editarLeadAdmin(@HeaderParam("token") String token,
+                                    @PathParam("id") Long idLead,
+                                    LeadDto dto) {
+        if (dto.getTitulo() == null || dto.getDescricao() == null) {
+            return Response.status(400).entity("Título e Descrição são obrigatórios.").build();
+        }
+
+        try {
+            adminBean.editarLeadAdmin(token, idLead, dto);
+            return Response.status(200).entity("Lead atualizada com sucesso (Admin).").build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
+    @DELETE
+    @Path("/users/{username}/leads")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response apagarTodasLeadsDeUser(@HeaderParam("token") String token,
+                                           @PathParam("username") String usernameAlvo,
+                                           @QueryParam("permanente") boolean permanente) {
+        try {
+            adminBean.apagarTodasLeadsDeUser(token, usernameAlvo, permanente);
+            String msg = permanente ? "Todas as leads excluídas." : "Todas as leads inativadas.";
+            return Response.status(200).entity(msg).build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
+    @DELETE
+    @Path("/leads/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response apagarLeadAdmin(@HeaderParam("token") String token,
+                                    @PathParam("id") Long idLead,
+                                    @QueryParam("permanente") boolean permanente) {
+        try {
+            adminBean.apagarLeadAdmin(token, idLead, permanente);
+            String msg = permanente ? "Lead excluída permanentemente." : "Lead inativada com sucesso.";
             return Response.status(200).entity(msg).build();
         } catch (Exception e) {
             return tratarExcecao(e);
