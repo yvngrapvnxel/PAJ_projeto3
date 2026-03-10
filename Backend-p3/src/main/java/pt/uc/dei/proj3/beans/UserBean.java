@@ -8,6 +8,7 @@ import pt.uc.dei.proj3.dto.UserDto;
 import pt.uc.dei.proj3.entity.UserEntity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 // Passamos a @Stateless (EJB) para gerir as transações automaticamente com a Base de Dados
 @Stateless
@@ -67,6 +68,13 @@ public class UserBean implements Serializable {
         return converterParaDto(entity);
     }
 
+    public boolean verificaPassword(UserDto user, String password) {
+
+        String userPass = user.getPassword();
+        return userPass.equals(password);
+
+    }
+
     // Função auxiliar para mapear de Entity (BD) para DTO (Frontend)
     public UserDto converterParaDto(UserEntity e) {
         UserDto dto = new UserDto();
@@ -76,6 +84,7 @@ public class UserBean implements Serializable {
         dto.setEmail(e.getEmail());
         dto.setTelefone(e.getTelefone());
         dto.setUsername(e.getUsername());
+        dto.setPassword(e.getPassword());
         dto.setFotoUrl(e.getFotoUrl());
         dto.setAdmin(e.isAdmin());
         return dto;

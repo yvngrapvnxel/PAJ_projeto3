@@ -102,4 +102,22 @@ public class UserService {
         return Response.status(200).entity("Perfil atualizado com sucesso!").build();
     }
 
+
+    @GET
+    @Path("/checkPass")
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean verificaPassword(
+            @HeaderParam("token") String token,
+            @HeaderParam("passAtual") String password) {
+
+        UserDto user = userBean.getUserByToken(token);
+
+        if (user == null || token == null || password == null) {
+            return false;
+        }
+
+        return userBean.verificaPassword(user, password);
+    }
+
+
 }

@@ -270,7 +270,7 @@ async function verPerfil() {
     }
 }
 
-async function guardarPerfil() {
+async function guardarPerfil(pass) {
     const passAtual = document.getElementById("perfilPassAtual").value;
     const telefoneInput = document.getElementById("perfilTelefone").value.trim();
     const token = localStorage.getItem("token");
@@ -282,6 +282,12 @@ async function guardarPerfil() {
 
     if (telefoneInput && !/^[29][0-9]{8}$/.test(telefoneInput)) {
         alert("O telefone deve ter 9 dígitos e começar por 2 ou 9.");
+        return;
+    }
+
+    const passIgual = await passwordValida(passAtual);
+    if (!passIgual) {
+        alert("Password incorreta. Tente novamente.");
         return;
     }
 
@@ -319,6 +325,26 @@ async function guardarPerfil() {
         }
     } catch (error) {
         console.error("Erro:", error);
+    }
+}
+
+
+async function passwordValida(passAtual) {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`http://localhost:8080/projeto3/rest/users/checkPass`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'token': token,
+                'passAtual': passAtual
+            },
+        });
+        if (!response.ok) return false;
+        return await response.json();
+    } catch (error) {
+        console.error("Erro:", error);
+        return false;
     }
 }
 
