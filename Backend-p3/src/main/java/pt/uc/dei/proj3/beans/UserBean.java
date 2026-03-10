@@ -78,6 +78,8 @@ public class UserBean implements Serializable {
         dto.setUsername(e.getUsername());
         dto.setFotoUrl(e.getFotoUrl());
         dto.setAdmin(e.isAdmin());
+        dto.setAtivo(e.isAtivo());
+
         return dto;
     }
 }

@@ -93,6 +93,18 @@ public class AdminBean implements Serializable {
         return userBean.converterParaDto(alvo);
     }
 
+    public void reactivateUser(String tokenAdmin, String usernameAlvo) throws Exception {
+        checkAdmin(tokenAdmin);
+
+        UserEntity alvo = adminDao.checkUsername(usernameAlvo);
+        if (alvo == null) {
+            throw new Exception("404: Utilizador não encontrado.");
+        }
+
+        alvo.setIsAtivo(true); // Passa o estado novamente para ativo
+        adminDao.merge(alvo);
+    }
+
     public void softDeleteUser(String tokenAdmin, String usernameAlvo) throws Exception {
         checkAdmin(tokenAdmin);
 
@@ -146,6 +158,34 @@ public class AdminBean implements Serializable {
         }
 
         clienteDao.atualizaCliente(clienteAtual, dtoNovo); // ClienteDao faz o update
+    }
+
+    // Reativar um cliente inativo
+    public void reactivateClienteAdmin(String tokenAdmin, Long idCliente) throws Exception {
+        checkAdmin(tokenAdmin);
+
+        ClienteEntity c = clienteDao.findClienteById(idCliente);
+        if (c == null) throw new Exception("404: Cliente não encontrado.");
+
+        c.setAtivo(true);
+        clienteDao.merge(c); // Guarda a alteração
+    }
+
+    // Reativar TODOS os clientes inativos de um utilizador
+    public void reativarTodosClientesDeUser(String tokenAdmin, String usernameAlvo) throws Exception {
+        checkAdmin(tokenAdmin);
+
+        UserEntity alvo = adminDao.checkUsername(usernameAlvo);
+        if (alvo == null) throw new Exception("404: Utilizador alvo não encontrado.");
+
+        List<ClienteEntity> clientes = clienteDao.findAllByUserForAdmin(alvo);
+        for (ClienteEntity c : clientes) {
+            // Só reativa os que estão inativos
+            if (!c.isAtivo()) {
+                c.setAtivo(true);
+                clienteDao.merge(c);
+            }
+        }
     }
 
     // Apagar Cliente (Soft ou Hard Delete)

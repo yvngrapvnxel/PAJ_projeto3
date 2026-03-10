@@ -11,6 +11,7 @@ public class ClientDto {
     private String telefone;
     private String empresa;
     private String dono;
+    private boolean ativo;
 
     public ClientDto() {}
 
@@ -41,5 +42,13 @@ public class ClientDto {
     }
     public void setDono(String dono) {
         this.dono = dono;
+    }
+
+    @XmlElement
+    public boolean isAtivo() {
+        return ativo;
+    }
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

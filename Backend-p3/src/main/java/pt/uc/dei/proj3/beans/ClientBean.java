@@ -93,7 +93,14 @@ public class ClientBean implements Serializable {
         c.setTelefone(e.getTelefone());
         c.setEmail(e.getEmail());
         c.setEmpresa(e.getEmpresa());
-        c.setDono(e.getUser().getUsername());
+
+        if (e.getUser() != null) {
+            c.setDono(e.getUser().getUsername());
+        } else {
+            c.setDono("Sem dono");
+        }
+
+        c.setAtivo(e.isAtivo());
 
         return c;
     }

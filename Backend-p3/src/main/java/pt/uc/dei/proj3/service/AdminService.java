@@ -39,6 +39,19 @@ public class AdminService {
         }
     }
 
+    @PUT
+    @Path("/users/{username}/reactivate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reactivateUser(@HeaderParam("token") String token,
+                                   @PathParam("username") String usernameAlvo) {
+        try {
+            adminBean.reactivateUser(token, usernameAlvo);
+            return Response.status(200).entity("Utilizador reativado com sucesso.").build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
     @DELETE
     @Path("/users/{username}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,6 +83,32 @@ public class AdminService {
                                       @PathParam("username") String usernameAlvo) {
         try {
             return Response.status(200).entity(adminBean.getClientFromUser(token, usernameAlvo)).build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
+    @PUT
+    @Path("/clients/{id}/reactivate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reactivateClienteAdmin(@HeaderParam("token") String token,
+                                           @PathParam("id") Long idCliente) {
+        try {
+            adminBean.reactivateClienteAdmin(token, idCliente);
+            return Response.status(200).entity("Cliente reativado com sucesso.").build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
+    @PUT
+    @Path("/users/{username}/clients/reactivate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reativarTodosClientesDeUser(@HeaderParam("token") String token,
+                                                @PathParam("username") String usernameAlvo) {
+        try {
+            adminBean.reativarTodosClientesDeUser(token, usernameAlvo);
+            return Response.status(200).entity("Todos os clientes foram reativados com sucesso.").build();
         } catch (Exception e) {
             return tratarExcecao(e);
         }
