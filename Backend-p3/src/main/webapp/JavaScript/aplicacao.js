@@ -89,7 +89,7 @@ function loadClientes() {
     content.innerHTML = `
     <div class="barra-clientes">
         <h2>Clientes</h2>
-        <button class="btn" type="button"onclick="formNovoCliente()"><i class="fa-solid fa-user-plus"></i>Novo Cliente</button>
+        <button class="btn" type="button" onclick="formNovoCliente()"><i class="fa-solid fa-user-plus"></i>Novo Cliente</button>
     </div>
     <!-- lista não ordenada de clientes -->
     <ul id="listaClientes"></ul> 
@@ -396,7 +396,7 @@ window.onload = function () {
     loadHeader(); //
     loadFooter(); //
 
-    if (path.includes("dashboard")) { //
+    if (path.includes("index.html")) { //
         roteador(); // Lê a URL e decide para onde ir!
     }
 };

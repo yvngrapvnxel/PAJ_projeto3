@@ -21,39 +21,25 @@ public class LeadDao extends DefaultDao<LeadEntity> implements Serializable {
     }
 
 
-    private LeadEntity converterParaEntity(LeadDto dto) {
-
-        LeadEntity novaLead = new LeadEntity();
-        novaLead.setTitulo(dto.getTitulo());
-        novaLead.setDescricao(dto.getDescricao());
-        novaLead.setEstado(dto.getEstado());
-        novaLead.setIsAtivo(true);
-        novaLead.setUser(dto.getUser());
-
-        return novaLead;
-    }
-
-
-    public void newLead(LeadDto dto) {
-        LeadEntity lead = converterParaEntity(dto);
+    public void newLead(LeadEntity lead) {
         em.persist(lead);
     }
 
 
-    public int updateLead(int id, LeadDto dto) {
+    public int updateLead(Long id, String titulo, String descricao, int estado) {
 
         return em.createQuery(
                         "UPDATE LeadEntity l SET l.titulo = :titulo, l.descricao = :descricao, l.estado = :estado " +
                                 "WHERE l.id = :id")
-                .setParameter("titulo", dto.getTitulo())
-                .setParameter("descricao", dto.getDescricao())
-                .setParameter("estado", dto.getEstado())
+                .setParameter("titulo", titulo)
+                .setParameter("descricao", descricao)
+                .setParameter("estado", estado)
                 .setParameter("id", id)
                 .executeUpdate();
 
     }
 
-    public int softDeleteLead(int id) {
+    public int softDeleteLead(Long id) {
 
         return em.createQuery("UPDATE LeadEntity l SET l.isAtivo = false WHERE l.id = :id")
                 .setParameter("id", id)
