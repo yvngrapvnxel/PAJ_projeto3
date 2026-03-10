@@ -205,7 +205,7 @@ public class AdminBean implements Serializable {
         if (leadAtual == null) throw new Exception("404: Lead não encontrada.");
 
         // Atualiza a lead usando o método que já tens no LeadDao
-        leadDao.updateLead(idLead.intValue(), dtoNovo);
+        leadDao.updateLead(idLead, dtoNovo.getTitulo(), dtoNovo.getDescricao(), dtoNovo.getEstado());
     }
 
     public void apagarTodasLeadsDeUser(String tokenAdmin, String usernameAlvo, boolean permanente) throws Exception {
