@@ -248,6 +248,32 @@ public class AdminBean implements Serializable {
         leadDao.updateLead(idLead, dtoNovo.getTitulo(), dtoNovo.getDescricao(), dtoNovo.getEstado());
     }
 
+    // ==========================================
+    // MÉTODOS DE REATIVAÇÃO (LEADS)
+    // ==========================================
+    public void reactivateLeadAdmin(String tokenAdmin, Long idLead) throws Exception {
+        checkAdmin(tokenAdmin);
+        LeadEntity l = leadDao.findLeadById(idLead);
+        if (l == null) throw new Exception("404: Lead não encontrada.");
+
+        l.setIsAtivo(true);
+        leadDao.merge(l);
+    }
+
+    public void reativarTodasLeadsDeUser(String tokenAdmin, String usernameAlvo) throws Exception {
+        checkAdmin(tokenAdmin);
+        UserEntity alvo = adminDao.checkUsername(usernameAlvo);
+        if (alvo == null) throw new Exception("404: Utilizador alvo não encontrado.");
+
+        List<LeadEntity> leads = leadDao.findAllByUserForAdmin(alvo);
+        for (LeadEntity l : leads) {
+            if (!l.isAtivo()) {
+                l.setIsAtivo(true);
+                leadDao.merge(l);
+            }
+        }
+    }
+
     public void apagarTodasLeadsDeUser(String tokenAdmin, String usernameAlvo, boolean permanente) throws Exception {
         checkAdmin(tokenAdmin);
 

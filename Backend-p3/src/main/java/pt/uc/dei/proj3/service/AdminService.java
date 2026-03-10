@@ -201,6 +201,30 @@ public class AdminService {
         }
     }
 
+    @PUT
+    @Path("/leads/{id}/reactivate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reactivateLeadAdmin(@HeaderParam("token") String token, @PathParam("id") Long idLead) {
+        try {
+            adminBean.reactivateLeadAdmin(token, idLead);
+            return Response.status(200).entity("Lead reativada com sucesso.").build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
+    @PUT
+    @Path("/users/{username}/leads/reactivate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reativarTodasLeadsDeUser(@HeaderParam("token") String token, @PathParam("username") String usernameAlvo) {
+        try {
+            adminBean.reativarTodasLeadsDeUser(token, usernameAlvo);
+            return Response.status(200).entity("Todas as leads foram reativadas com sucesso.").build();
+        } catch (Exception e) {
+            return tratarExcecao(e);
+        }
+    }
+
     @DELETE
     @Path("/users/{username}/leads")
     @Produces(MediaType.APPLICATION_JSON)
