@@ -74,7 +74,7 @@ public class ClientService {
         return Response.status(200).entity(clientes).build();
     }
 
-    @PUT
+    @POST
     @Path("/edit")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editClient(@HeaderParam("token") String token, ClientDto dto) {
@@ -105,7 +105,7 @@ public class ClientService {
         }
     }
 
-    @POST
+    @DELETE
     @Path("/remove")
     public Response removeClient(@HeaderParam("token") String token, ClientDto dto) {
 

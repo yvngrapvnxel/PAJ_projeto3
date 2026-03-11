@@ -299,7 +299,7 @@ async function removerLead(id) {
 
   try {
     const response = await fetch(`${LEADS_API_URL}/${id}`, {
-      method: "POST",
+      method: "DELETE",
       headers: { "token": token },
     });
 

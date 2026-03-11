@@ -1,6 +1,4 @@
-<!-- ficheiro inicial da aplicação -->
 <!DOCTYPE html>
-<!-- linguagem definida para português: serve para acessibilidade, motores de busca, leitores de ecrã -->
 <html lang="pt">
 
 <head >
@@ -13,14 +11,8 @@
     <link rel="stylesheet" href="CSS/asideMain.css">
     <link rel="stylesheet" href="CSS/leads.css">
     <link rel="stylesheet" href="CSS/admin.css">
-    <!-- ver ordem de ficheiros js, qual deve ser executado primeiro -->
-    <script src="JavaScript/leads.js" defer></script>
-    <script src="JavaScript/aplicacao.js" defer></script>
-    <script src="JavaScript/clientes.js" defer></script>
-    <script src="JavaScript/admin.js"></script>
     <script src="https://kit.fontawesome.com/d02d54555c.js" crossorigin="anonymous"></script>
 </head>
-
 
 <body>
 
@@ -37,21 +29,20 @@
     <button class="btn" onclick="loadProjetos()">Projetos</button>
     <br>
     <button class="btn" onclick="loadTarefas()">Tarefas</button>
-  
   </aside>
 
   <main id="content">
-    
   </main>
 
   <footer>
-
     <div id="footer"></div>
-
   </footer>
 
-  
-  
+  <script src="JavaScript/leads.js" defer></script>
+  <script src="JavaScript/clientes.js" defer></script>
+  <script src="JavaScript/admin.js" defer></script>
+  <script src="JavaScript/aplicacao.js" defer></script>
+
 </body>
 
 </html>

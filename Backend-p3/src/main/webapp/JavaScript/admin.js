@@ -278,7 +278,7 @@ async function apagarUtilizadorAdmin(username, permanente) {
 async function reativarUtilizadorAdmin(username) {
     if (!confirm(`Tens a certeza que queres reativar o utilizador @${username}?`)) return;
     try {
-        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/reactivate`, { method: 'PUT', headers: { "token": token } });
+        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/reactivate`, { method: 'POST', headers: { "token": token } });
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
     } catch (error) { alert("Falha na comunicação."); }
@@ -300,7 +300,7 @@ async function reativarTodosClientesAdmin(username) {
     if (!confirm(`Tens a certeza que queres reativar TODOS os clientes inativos de @${username}?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}/clients/reactivate`;
-        const response = await fetch(url, { method: 'PUT', headers: { "token": token }});
+        const response = await fetch(url, { method: 'POST', headers: { "token": token }});
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
     } catch (error) { alert("Falha na comunicação."); }
@@ -320,7 +320,7 @@ async function apagarClienteAdminBtn(idCliente, permanente, usernameToRefresh) {
 async function reativarClienteAdminBtn(idCliente, usernameToRefresh) {
     if (!confirm(`Tens a certeza que queres reativar este cliente?`)) return;
     try {
-        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/clients/${idCliente}/reactivate`, { method: 'PUT', headers: { "token": token } });
+        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/clients/${idCliente}/reactivate`, { method: 'POST', headers: { "token": token } });
         alert(await response.text());
         await abrirDetalhesUtilizador(usernameToRefresh);
     } catch (error) { alert("Falha na comunicação."); }
@@ -350,7 +350,7 @@ async function reativarTodasLeadsAdmin(username) {
     if (!confirm(`Tens a certeza que queres reativar TODAS as leads inativas de @${username}?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}/leads/reactivate`;
-        const response = await fetch(url, { method: 'PUT', headers: { "token": token }});
+        const response = await fetch(url, { method: 'POST', headers: { "token": token }});
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
     } catch (error) { alert("Falha na comunicação."); }
@@ -370,7 +370,7 @@ async function apagarLeadAdminBtn(idLead, permanente, usernameToRefresh) {
 async function reativarLeadAdminBtn(idLead, usernameToRefresh) {
     if (!confirm(`Tens a certeza que queres reativar esta Lead?`)) return;
     try {
-        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/leads/${idLead}/reactivate`, { method: 'PUT', headers: { "token": token } });
+        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/leads/${idLead}/reactivate`, { method: 'POST', headers: { "token": token } });
         alert(await response.text());
         await abrirDetalhesUtilizador(usernameToRefresh);
     } catch (error) { alert("Falha na comunicação."); }

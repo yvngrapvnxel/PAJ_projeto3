@@ -68,7 +68,7 @@ public class LeadService {
     }
 
 
-    @PUT
+    @POST
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editarLead(@PathParam("id") Long id,
@@ -98,7 +98,7 @@ public class LeadService {
     }
 
 
-    @POST
+    @DELETE
     @Path("/{id}")
     public Response softDeleteLead(@PathParam("id") Long id,
                                  @HeaderParam("token") String token) {

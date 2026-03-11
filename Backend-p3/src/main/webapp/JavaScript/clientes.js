@@ -200,7 +200,7 @@ async function removerCliente(index) {
 
     try {
         const response = await fetch(`${API_URL}/remove`, {
-            method: "POST",
+            method: "DELETE",
             headers: { "Content-Type": "application/json", "token": token},
             body: JSON.stringify( dados ) // O backend espera um JSON com o ID para remover
         });
