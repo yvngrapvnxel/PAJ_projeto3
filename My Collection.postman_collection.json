@@ -106,7 +106,7 @@
             {
               "name": "soft delete client",
               "request": {
-                "method": "POST",
+                "method": "DELETE",
                 "header": [
                   {
                     "key": "token",
@@ -232,7 +232,7 @@
             {
               "name": "soft delete lead",
               "request": {
-                "method": "POST",
+                "method": "DELETE",
                 "header": [
                   {
                     "key": "token",
@@ -519,7 +519,7 @@
             {
               "name": "reativar clientes",
               "request": {
-                "method": "PUT",
+                "method": "POST",
                 "header": [
                   {
                     "key": "token",
@@ -604,7 +604,7 @@
             {
               "name": "reativar cliente",
               "request": {
-                "method": "PUT",
+                "method": "POST",
                 "header": [
                   {
                     "key": "token",
@@ -815,7 +815,7 @@
             {
               "name": "reativar leads",
               "request": {
-                "method": "PUT",
+                "method": "POST",
                 "header": [
                   {
                     "key": "token",
@@ -904,7 +904,7 @@
             {
               "name": "reativar lead",
               "request": {
-                "method": "PUT",
+                "method": "POST",
                 "header": [
                   {
                     "key": "token",
@@ -993,7 +993,7 @@
         {
           "name": "reativar user",
           "request": {
-            "method": "PUT",
+            "method": "POST",
             "header": [
               {
                 "key": "token",
@@ -1079,6 +1079,30 @@
           "response": []
         }
       ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
     }
   ]
 }
