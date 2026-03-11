@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import pt.uc.dei.proj3.dao.ClienteDao;
 import pt.uc.dei.proj3.dao.UserDao;
 import pt.uc.dei.proj3.dto.ClientDto;
-import pt.uc.dei.proj3.dto.UserDto;
 import pt.uc.dei.proj3.entity.ClienteEntity;
 import pt.uc.dei.proj3.entity.UserEntity;
 
@@ -38,7 +37,7 @@ public class ClientBean implements Serializable {
         return newClient;
     }
 
-    public boolean editarCliente(Long idCliente, ClientDto dtoNovo) throws Exception {
+    public void editarCliente(Long idCliente, ClientDto dtoNovo) throws Exception {
 
         ClienteEntity clienteAtual = clienteDao.findClienteById(idCliente);
 
@@ -56,7 +55,6 @@ public class ClientBean implements Serializable {
         // 3. Manda para o DAO atualizar a entidade
         clienteDao.atualizaCliente(clienteAtual, dtoNovo);
 
-        return true;
     }
 
     public List<ClientDto> listClients(String username) {

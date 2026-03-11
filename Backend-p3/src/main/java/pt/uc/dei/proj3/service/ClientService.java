@@ -74,7 +74,7 @@ public class ClientService {
         return Response.status(200).entity(clientes).build();
     }
 
-    @POST
+    @PATCH
     @Path("/edit")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editClient(@HeaderParam("token") String token, ClientDto dto) {
@@ -82,7 +82,6 @@ public class ClientService {
         UserDto user = userBean.getUserByToken(token);
 
         // 1. Verificação de Autenticação (como fazes no login/register)
-        // 1. Usar o novo método validarToken em vez do login
         if (user == null || token == null ) {
             return Response.status(401).entity("Acesso negado - Token inválido ou ausente").build(); // Retorna 401 conforme o enunciado
         }

@@ -165,14 +165,17 @@ async function guardarCliente(index = null) {
         } else {
             // PUT: Editar Cliente
             dados.id = clienteList[index].id; // IMPORTANTE: O backend precisa do ID dentro do DTO
+
+            console.log("dados.id: ", dados.id);
             
             response = await fetch(`${API_URL}/edit`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: { "Content-Type": "application/json", "token": token },
                 body: JSON.stringify(dados)
             });
         }
 
+        console.log("response: ", response);
         if (response.ok) {
             alert(index === null ? "Cliente adicionado com sucesso!" : "Cliente atualizado com sucesso!");
             await carregarClientes(); // Limpa e volta à lista

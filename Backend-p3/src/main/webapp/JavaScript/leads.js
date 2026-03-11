@@ -268,7 +268,7 @@ async function guardarLead(id = null) {
     } else {
       // PUT: Editar Lead
       response = await fetch(`${LEADS_API_URL}/${id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           "token": token

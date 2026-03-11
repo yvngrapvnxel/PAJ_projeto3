@@ -68,7 +68,7 @@ public class LeadService {
     }
 
 
-    @POST
+    @PATCH
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editarLead(@PathParam("id") Long id,
