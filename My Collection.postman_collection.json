@@ -1,10 +1,11 @@
 {
   "info": {
-    "_postman_id": "ed5d15a1-3c20-4627-87b8-3bbae5a58949",
+    "_postman_id": "ce88740d-dbf9-4420-991a-25a0c6ec362b",
     "name": "My Collection",
     "description": "### Welcome to Postman! This is your first collection.\n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests  \n• Test your API in real-world scenarios  \n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "53046505"
+    "_exporter_id": "52272185",
+    "_collection_link": "https://go.postman.co/collection/52272185-ce88740d-dbf9-4420-991a-25a0c6ec362b?source=collection_link"
   },
   "item": [
     {
@@ -484,7 +485,7 @@
             {
               "name": "edit/save cliente",
               "request": {
-                "method": "PUT",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -612,14 +613,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/admin/clients/1001/reactivate",
+                  "raw": "{{base_url}}/admin/clients/1061/reactivate",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "admin",
                     "clients",
-                    "1001",
+                    "1061",
                     "reactivate"
                   ]
                 }
@@ -638,14 +639,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/admin/clients/1001",
+                  "raw": "{{base_url}}/admin/clients/1011",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "admin",
                     "clients",
-                    "1001"
+                    "1011"
                   ]
                 }
               },
@@ -663,14 +664,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/admin/clients/1001?permanente=true",
+                  "raw": "{{base_url}}/admin/clients/1011?permanente=true",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "admin",
                     "clients",
-                    "1001"
+                    "1011"
                   ],
                   "query": [
                     {
@@ -716,7 +717,7 @@
             {
               "name": "edit/save lead",
               "request": {
-                "method": "PUT",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -734,14 +735,14 @@
                   }
                 },
                 "url": {
-                  "raw": "{{base_url}}/admin/leads/1001",
+                  "raw": "{{base_url}}/admin/leads/1062",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "admin",
                     "leads",
-                    "1001"
+                    "1062"
                   ]
                 }
               },
@@ -850,14 +851,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/admin/leads/1002?permanente=false",
+                  "raw": "{{base_url}}/admin/leads/1004?permanente=false",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "admin",
                     "leads",
-                    "1002"
+                    "1004"
                   ],
                   "query": [
                     {
@@ -881,14 +882,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/admin/leads/1002?permanente=true",
+                  "raw": "{{base_url}}/admin/leads/1061?permanente=true",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "admin",
                     "leads",
-                    "1002"
+                    "1061"
                   ],
                   "query": [
                     {
@@ -912,14 +913,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/admin/leads/1001/reactivate",
+                  "raw": "{{base_url}}/admin/leads/1004/reactivate",
                   "host": [
                     "{{base_url}}"
                   ],
                   "path": [
                     "admin",
                     "leads",
-                    "1001",
+                    "1004",
                     "reactivate"
                   ]
                 }
