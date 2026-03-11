@@ -45,7 +45,7 @@ async function carregarListaUtilizadores() {
 
     try {
         const response = await fetch("http://localhost:8080/projeto3/rest/admin/users", {
-            method: "GET", headers: { "token": token }
+            method: "GET", headers: {"token": token}
         });
 
         if (response.ok) {
@@ -71,9 +71,18 @@ async function abrirDetalhesUtilizador(username) {
     if (btnVoltar) btnVoltar.style.display = "inline-block";
 
     try {
-        const resUser = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}`, { method: 'GET', headers: { "token": token } });
-        const resClients = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/clients`, { method: 'GET', headers: { "token": token } });
-        const resLeads = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/leads`, { method: 'GET', headers: { "token": token } });
+        const resUser = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}`, {
+            method: 'GET',
+            headers: {"token": token}
+        });
+        const resClients = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/clients`, {
+            method: 'GET',
+            headers: {"token": token}
+        });
+        const resLeads = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/leads`, {
+            method: 'GET',
+            headers: {"token": token}
+        });
 
         if (resUser.ok && resClients.ok && resLeads.ok) {
             const user = await resUser.json();
@@ -269,19 +278,26 @@ async function apagarUtilizadorAdmin(username, permanente) {
     if (!confirm(`Tens a certeza que queres ${permanente ? 'EXCLUIR DEFINITIVAMENTE' : 'inativar'} o utilizador @${username}?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": token } });
+        const response = await fetch(url, {method: 'DELETE', headers: {"token": token}});
         alert(await response.text());
         permanente ? await carregarListaUtilizadores() : await abrirDetalhesUtilizador(username);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 async function reativarUtilizadorAdmin(username) {
     if (!confirm(`Tens a certeza que queres reativar o utilizador @${username}?`)) return;
     try {
-        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/reactivate`, { method: 'POST', headers: { "token": token } });
+        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/users/${username}/reactivate`, {
+            method: 'PATCH',
+            headers: {"token": token}
+        });
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 // --- CLIENTES ---
@@ -290,20 +306,24 @@ async function apagarTodosClientesAdmin(username, permanente) {
     if (!confirm(`Tens a certeza que queres ${acao} TODOS os clientes de @${username}?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}/clients` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": token }});
+        const response = await fetch(url, {method: 'DELETE', headers: {"token": token}});
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 async function reativarTodosClientesAdmin(username) {
     if (!confirm(`Tens a certeza que queres reativar TODOS os clientes inativos de @${username}?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}/clients/reactivate`;
-        const response = await fetch(url, { method: 'POST', headers: { "token": token }});
+        const response = await fetch(url, {method: 'PATCH', headers: {"token": token}});
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 async function apagarClienteAdminBtn(idCliente, permanente, usernameToRefresh) {
@@ -311,19 +331,26 @@ async function apagarClienteAdminBtn(idCliente, permanente, usernameToRefresh) {
     if (!confirm(`${acao} este Cliente?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/clients/${idCliente}` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": token }});
+        const response = await fetch(url, {method: 'DELETE', headers: {"token": token}});
         alert(await response.text());
         await abrirDetalhesUtilizador(usernameToRefresh);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 async function reativarClienteAdminBtn(idCliente, usernameToRefresh) {
     if (!confirm(`Tens a certeza que queres reativar este cliente?`)) return;
     try {
-        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/clients/${idCliente}/reactivate`, { method: 'POST', headers: { "token": token } });
+        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/clients/${idCliente}/reactivate`, {
+            method: 'PATCH',
+            headers: {"token": token}
+        });
         alert(await response.text());
         await abrirDetalhesUtilizador(usernameToRefresh);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 // --- LEADS ---
@@ -340,20 +367,24 @@ async function apagarTodasLeadsAdmin(username, permanente) {
     if (!confirm(`Tens a certeza que queres ${acao} TODAS as leads de @${username}?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}/leads` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": token }});
+        const response = await fetch(url, {method: 'DELETE', headers: {"token": token}});
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 async function reativarTodasLeadsAdmin(username) {
     if (!confirm(`Tens a certeza que queres reativar TODAS as leads inativas de @${username}?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/users/${username}/leads/reactivate`;
-        const response = await fetch(url, { method: 'POST', headers: { "token": token }});
+        const response = await fetch(url, {method: 'PATCH', headers: {"token": token}});
         alert(await response.text());
         await abrirDetalhesUtilizador(username);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 async function apagarLeadAdminBtn(idLead, permanente, usernameToRefresh) {
@@ -361,19 +392,26 @@ async function apagarLeadAdminBtn(idLead, permanente, usernameToRefresh) {
     if (!confirm(`${acao} esta Lead?`)) return;
     try {
         let url = `http://localhost:8080/projeto3/rest/admin/leads/${idLead}` + (permanente ? "?permanente=true" : "");
-        const response = await fetch(url, { method: 'DELETE', headers: { "token": token }});
+        const response = await fetch(url, {method: 'DELETE', headers: {"token": token}});
         alert(await response.text());
         await abrirDetalhesUtilizador(usernameToRefresh);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 async function reativarLeadAdminBtn(idLead, usernameToRefresh) {
     if (!confirm(`Tens a certeza que queres reativar esta Lead?`)) return;
     try {
-        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/leads/${idLead}/reactivate`, { method: 'POST', headers: { "token": token } });
+        const response = await fetch(`http://localhost:8080/projeto3/rest/admin/leads/${idLead}/reactivate`, {
+            method: 'PATCH',
+            headers: {"token": token}
+        });
         alert(await response.text());
         await abrirDetalhesUtilizador(usernameToRefresh);
-    } catch (error) { alert("Falha na comunicação."); }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 // ==========================================
@@ -408,14 +446,21 @@ async function guardarEdicaoClienteAdmin(idCliente, username) {
         alert("Nome, Empresa e pelo menos um contacto são obrigatórios.");
         return;
     }
-    const dados = { id: idCliente, nome, email, telefone, empresa };
+    const dados = {id: idCliente, nome, email, telefone, empresa};
     try {
         const response = await fetch(`http://localhost:8080/projeto3/rest/admin/clients/${idCliente}`, {
-            method: 'PUT', headers: { "Content-Type": "application/json", "token": token }, body: JSON.stringify(dados)
+            method: 'PATCH', headers: {"Content-Type": "application/json", "token": token}, body: JSON.stringify(dados)
         });
         const msg = await response.text();
-        if (response.ok) { alert("Sucesso: " + msg); await abrirDetalhesUtilizador(username); } else { alert("Erro: " + msg); }
-    } catch (error) { alert("Falha na comunicação."); }
+        if (response.ok) {
+            alert("Sucesso: " + msg);
+            await abrirDetalhesUtilizador(username);
+        } else {
+            alert("Erro: " + msg);
+        }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }
 
 function mostrarFormEdicaoLeadAdmin(idLead, username) {
@@ -443,13 +488,23 @@ async function guardarEdicaoLeadAdmin(idLead, username) {
     const descricao = document.getElementById("editAdminLeadDescricao").value.trim();
     const estado = parseInt(document.getElementById("editAdminLeadEstado").value);
 
-    if (!titulo || !descricao) { alert("Título e Descrição são obrigatórios."); return; }
-    const dados = { id: idLead, titulo, descricao, estado };
+    if (!titulo || !descricao) {
+        alert("Título e Descrição são obrigatórios.");
+        return;
+    }
+    const dados = {id: idLead, titulo, descricao, estado};
     try {
         const response = await fetch(`http://localhost:8080/projeto3/rest/admin/leads/${idLead}`, {
-            method: 'PUT', headers: { "Content-Type": "application/json", "token": token }, body: JSON.stringify(dados)
+            method: 'PATCH', headers: {"Content-Type": "application/json", "token": token}, body: JSON.stringify(dados)
         });
         const msg = await response.text();
-        if (response.ok) { alert("Sucesso: " + msg); await abrirDetalhesUtilizador(username); } else { alert("Erro: " + msg); }
-    } catch (error) { alert("Falha na comunicação."); }
+        if (response.ok) {
+            alert("Sucesso: " + msg);
+            await abrirDetalhesUtilizador(username);
+        } else {
+            alert("Erro: " + msg);
+        }
+    } catch (error) {
+        alert("Falha na comunicação.");
+    }
 }

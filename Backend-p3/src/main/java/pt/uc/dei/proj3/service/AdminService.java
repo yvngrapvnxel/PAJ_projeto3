@@ -39,7 +39,7 @@ public class AdminService {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/users/{username}/reactivate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response reactivateUser(@HeaderParam("token") String token,
@@ -88,7 +88,7 @@ public class AdminService {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/clients/{id}/reactivate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response reactivateClienteAdmin(@HeaderParam("token") String token,
@@ -101,7 +101,7 @@ public class AdminService {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/users/{username}/clients/reactivate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response reativarTodosClientesDeUser(@HeaderParam("token") String token,
@@ -130,7 +130,7 @@ public class AdminService {
     }
 
     // Editar um cliente específico
-    @PUT
+    @PATCH
     @Path("/clients/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -182,7 +182,7 @@ public class AdminService {
     }
 
     // Editar uma lead específica (Admin)
-    @PUT
+    @PATCH
     @Path("/leads/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -201,7 +201,7 @@ public class AdminService {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/leads/{id}/reactivate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response reactivateLeadAdmin(@HeaderParam("token") String token, @PathParam("id") Long idLead) {
@@ -213,7 +213,7 @@ public class AdminService {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/users/{username}/leads/reactivate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response reativarTodasLeadsDeUser(@HeaderParam("token") String token, @PathParam("username") String usernameAlvo) {
