@@ -1,11 +1,10 @@
 {
   "info": {
-    "_postman_id": "2a0d7cd1-e870-4fb7-827c-6ec6b3ab4239",
+    "_postman_id": "ed5d15a1-3c20-4627-87b8-3bbae5a58949",
     "name": "My Collection",
     "description": "### Welcome to Postman! This is your first collection.\n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests  \n• Test your API in real-world scenarios  \n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "52272185",
-    "_collection_link": "https://go.postman.co/collection/52272185-2a0d7cd1-e870-4fb7-827c-6ec6b3ab4239?source=collection_link"
+    "_exporter_id": "53046505"
   },
   "item": [
     {
@@ -73,7 +72,7 @@
             {
               "name": "edit client",
               "request": {
-                "method": "PUT",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -199,7 +198,7 @@
             {
               "name": "edit lead",
               "request": {
-                "method": "PUT",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -519,7 +518,7 @@
             {
               "name": "reativar clientes",
               "request": {
-                "method": "POST",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -604,7 +603,7 @@
             {
               "name": "reativar cliente",
               "request": {
-                "method": "POST",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -815,7 +814,7 @@
             {
               "name": "reativar leads",
               "request": {
-                "method": "POST",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -904,7 +903,7 @@
             {
               "name": "reativar lead",
               "request": {
-                "method": "POST",
+                "method": "PATCH",
                 "header": [
                   {
                     "key": "token",
@@ -993,7 +992,7 @@
         {
           "name": "reativar user",
           "request": {
-            "method": "POST",
+            "method": "PATCH",
             "header": [
               {
                 "key": "token",
